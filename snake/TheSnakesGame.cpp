@@ -70,14 +70,21 @@ void TheSnakesGame::run() {
 			moveBullets();
 			Sleep(100);
 		}
-
+		s[0].returnAfterGetShot();
 		s[0].move();
+
+		s[1].returnAfterGetShot();
 		s[1].move();
+
 		Sleep(150);
 
 		fiveMoves++;
-		if (fiveMoves % 5 == 0)//check if we need to add another number to board
+		if (fiveMoves % 5 == 0) {//check if we need to add another number to board
 			this->getBoard(1).insertRndNumberToFood();
+			s[0].setCanMove(s[0].getCanMove() + 1);
+			s[1].setCanMove(s[1].getCanMove() + 1);
+		}
+
 
 	} while (key != ESC);
 
@@ -283,35 +290,45 @@ void TheSnakesGame::moveBullets()
 		for (int j = 0; j < 5; j++) {
 			int direction = s[i].getBulletFromStack(j).getDirection();
 			if (s[i].getBulletFromStack(j).isActive()) {
+
 				pos.set(s[i].getBulletFromStack(j).getX(), s[i].getBulletFromStack(j).getY());
-				hit = s[i].hitSomething(s[i].getBulletFromStack(j).next(direction));
+
+				gameBoard[0].insertCharToBoard(' ', pos);
+				s[i].getBulletFromStack(j).draw(' ');
+
+				pos.move(s[i].getBulletFromStack(j).getDirection());
+				s[i].getBulletFromStack(j).set(pos.getX(), pos.getY());
+				gameBoard[0].insertCharToBoard('*', pos);
+				setTextColor(s[i].getColor());
+				s[i].getBulletFromStack(j).draw('*');
+				setTextColor(Color::WHITE);
+
+				hit = s[i].hitSomething(pos.next(direction));
 				if (hit == 0)//s[i] hit himself
 				{
 					s[i].setCanMove(-5);
-					//s[i].disappear();
+					s[i].disappear();
 					s[i].getBulletFromStack(j).setActiveStatus(false);
+					gameBoard[0].insertCharToBoard(' ', pos);
+					s[i].getBulletFromStack(j).draw(' ');
 				}
 				else if (hit == 1)//s[i] hit the other snake
 				{
 					s[(i + 1) % 2].setCanMove(-5);
-					//s[(i + 1) % 2].disappear();
+					s[(i + 1) % 2].disappear();
 					s[i].setScore(s[i].getScore() + 1);
 					s[i].setStackSize(s[i].getStackSize() + 1);
 					s[i].getBulletFromStack(j).setActiveStatus(false);
+					gameBoard[0].insertCharToBoard(' ', pos);
+					s[i].getBulletFromStack(j).draw(' ');
 				}
 				else if (hit == 2)//s[i] hit a number
 				{
-					getBoard(1).removeNumber(getBoard(1).getNumber(pos));
+					getBoard(1).removeNumber(getBoard(1).getNumber(pos.next(direction)));
 					s[i].getBulletFromStack(j).setActiveStatus(false);
-				}
-				
 					gameBoard[0].insertCharToBoard(' ', pos);
 					s[i].getBulletFromStack(j).draw(' ');
-
-					pos.move(s[i].getBulletFromStack(j).getDirection());
-					s[i].getBulletFromStack(j).set(pos.getX(), pos.getY());
-					gameBoard[0].insertCharToBoard('*', pos);
-					s[i].getBulletFromStack(j).draw('*');
+				}
 			}
 		}
 	}
