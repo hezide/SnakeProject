@@ -22,7 +22,7 @@ bool Riddles::solveRiddle(int numOfRiddle, int numToSolve)
 		return solveNumIsPowerOfIntegerNumber(numToSolve);
 		break;
 	case 6:
-		return solveNumIsDivideBy4(numToSolve);
+		return solveNumIsDivideBy4(numToSolve);//
 		break;
 	case 7:
 		return solveNumIsDivideBy5WithCarry2(numToSolve);
