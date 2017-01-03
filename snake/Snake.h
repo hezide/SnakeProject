@@ -6,7 +6,7 @@
 #include "Bullet.h"
 
 class TheSnakesGame;
-
+/*TEST*/
 class Snake {
 	enum { initSize = 15 };
 	int size = 3;
