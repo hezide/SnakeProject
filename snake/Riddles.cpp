@@ -1,5 +1,5 @@
 #include "Riddles.h"
-
+/*test*/
 bool Riddles::solveRiddle(int numOfRiddle, int numToSolve)
 {
 	switch (numOfRiddle) {
