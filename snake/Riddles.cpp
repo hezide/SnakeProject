@@ -1,10 +1,10 @@
 #include "Riddles.h"
-/*test*/
+
 bool Riddles::solveRiddle(int numOfRiddle, int numToSolve)
 {
 	switch (numOfRiddle) {
 	case 0:
-		return solveComplexExercise(numToSolve);
+		//return solveComplexExercise(numToSolve);
 		break;
 	case 1:
 		return solveIsEven(numToSolve);

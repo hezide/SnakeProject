@@ -35,7 +35,7 @@ public:
 	void printBlock();
 	void printRiddle(int currRiddle) {
 		if (currRiddle == 0)
-			createComplexExercise();
+			//createComplexExercise();
 		gotoxy(1, -FIXGOTOXY + 4);
 		printf("%s", riddleNames[currRiddle]);
 		Sleep(500);
@@ -47,8 +47,8 @@ public:
 			return false;
 	}
 private:
-	void createComplexExercise();
-	bool solveComplexExercise(int numToSolve);
+//	void createComplexExercise();
+//	bool solveComplexExercise(int numToSolve);
 	bool solveIsEven(int numToSolve) {
 		if (numToSolve % 2 == 0)
 			return true;
