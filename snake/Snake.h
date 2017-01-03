@@ -95,6 +95,8 @@ public:
 		return stack[index];
 	}
 	int hitSomething(Point next);
-	//void disappear();
+	void disappear();
+	void returnAfterGetShot();
+	bool posIsOk(Point pos);
 };
 #endif

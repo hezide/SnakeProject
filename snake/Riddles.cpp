@@ -1,36 +1,33 @@
 #include "Riddles.h"
-/*test*/
+
 bool Riddles::solveRiddle(int numOfRiddle, int numToSolve)
 {
 	switch (numOfRiddle) {
 	case 0:
-		return solveComplexExercise(numToSolve);
-		break;
-	case 1:
 		return solveIsEven(numToSolve);
 		break;
-	case 2:
+	case 1:
 		return solveIsPrimeNumber(numToSolve);
 		break;
-	case 3:
+	case 2:
 		return solveNumIsDivideBy3(numToSolve);
 		break;
-	case 4:
+	case 3:
 		return solveNumIsMultipleOf7(numToSolve);
 		break;
-	case 5:
+	case 4:
 		return solveNumIsPowerOfIntegerNumber(numToSolve);
 		break;
-	case 6:
+	case 5:
 		return solveNumIsDivideBy4(numToSolve);
 		break;
-	case 7:
+	case 6:
 		return solveNumIsDivideBy5WithCarry2(numToSolve);
 		break;
-	case 8:
+	case 7:
 		return collectPowOf4(numToSolve);
 		break;
-	case 9:
+	case 8:
 		return collectNumberThatCanDivide16(numToSolve);
 		break;
 	default:

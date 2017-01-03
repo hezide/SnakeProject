@@ -44,6 +44,8 @@ int Snake::nextStepIsPossible()//return 2 if the snake hit the other snake, 3 if
 	Point next = body[0].next(direction);
 	ch = theGame->getBoard(1).getChFromBoard(next.getX(),next.getY());
 
+	if (canMove < 0)
+		return 2;
 	if (ch == '@' || ch == '#')
 		return 2;
 	if (ch >= '0' && ch <= '9')
@@ -78,7 +80,41 @@ int Snake::hitSomething(Point next)//return 0 if the sanke hit himself, 1 if he 
 	else return -1;
 }
 
-//void Snake::disappear()
-//{
-//
-//}
+void Snake::disappear()
+{
+	Point p;
+	for (int i = 0; i < size; i++) {
+		body[i].draw(' ');
+		p.set(body[i].getX(), body[i].getY());
+		theGame->getBoard(1).insertCharToBoard(' ', p);
+	}
+
+}
+
+void Snake::returnAfterGetShot()
+{
+	Point pos;
+	if (canMove == 0)
+	{
+		do {
+			pos.set(rand() % 78, rand() % 22);
+		} while (!posIsOk(pos));//check if the new position of the snake is ok
+		setPosition(pos.getY(), pos.getX());
+	}
+}
+
+bool Snake::posIsOk(Point pos)
+{
+	Number num;
+	char ch = theGame->getBoard(1).getChFromBoard(pos.getX(), pos.getY());
+
+	if (ch == ' ')
+		return true;
+	else if (ch >= '0' && ch <= '9') {
+		num = theGame->getBoard(1).getNumber(pos);
+		theGame->getBoard(1).removeNumber(num);
+		return true;
+	}
+	else
+		return false;
+}
