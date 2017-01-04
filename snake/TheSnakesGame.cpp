@@ -68,7 +68,7 @@ void TheSnakesGame::run() {
 
 		for (int i = 0; i < 2; i++) {
 			moveBullets();
-			Sleep(100);
+			//Sleep(100);
 		}
 		s[0].returnAfterGetShot();
 		s[0].move();
@@ -291,18 +291,6 @@ void TheSnakesGame::moveBullets()
 			int direction = s[i].getBulletFromStack(j).getDirection();
 			if (s[i].getBulletFromStack(j).isActive()) {
 
-				pos.set(s[i].getBulletFromStack(j).getX(), s[i].getBulletFromStack(j).getY());
-				nextPos = pos;
-				gameBoard[0].insertCharToBoard(' ', pos);
-				s[i].getBulletFromStack(j).draw(' ');
-
-				pos.move(s[i].getBulletFromStack(j).getDirection());
-				s[i].getBulletFromStack(j).set(pos.getX(), pos.getY());
-				gameBoard[0].insertCharToBoard('*', pos);
-				setTextColor(s[i].getColor());
-				s[i].getBulletFromStack(j).draw('*');
-				setTextColor(Color::WHITE);
-
 				hit = s[i].hitSomething(pos.next(direction));
 				if (hit == 0)//s[i] hit himself
 				{
@@ -352,6 +340,19 @@ void TheSnakesGame::moveBullets()
 				//	s[i].getBulletFromStack(j).draw(' ');
 				//	//s[(i+1)%2]
 				//}
+				else {
+					pos.set(s[i].getBulletFromStack(j).getX(), s[i].getBulletFromStack(j).getY());
+					nextPos = pos;
+					gameBoard[0].insertCharToBoard(' ', pos);
+					s[i].getBulletFromStack(j).draw(' ');
+
+					pos.move(s[i].getBulletFromStack(j).getDirection());
+					s[i].getBulletFromStack(j).set(pos.getX(), pos.getY());
+					gameBoard[0].insertCharToBoard('*', pos);
+					setTextColor(s[i].getColor());
+					s[i].getBulletFromStack(j).draw('*');
+					setTextColor(Color::WHITE);
+				}
 			}
 		}
 	}
