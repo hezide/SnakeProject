@@ -79,12 +79,12 @@ void Riddles::createComplexExercise()
 			sol = calcTwoNums(leftMid, right, op2);
 		}
 		numToSolve=randWhiceNumShouldBeSolved(left, mid, right, sol);
-		isLegalExercise = checkIfExerciseIsLegal();
-	}while(!isLegalExercise)
+		isLegalExercise = checkIfExerciseIsLegal(numToSolve);
+	} while (!isLegalExercise);
 
 
 }
-int Riddles::getRandomNumber(char op = ' ',int before=0) {
+int Riddles::getRandomNumber(char op,int before) {
 	int num;
 	if (op == '/')
 		num = rand() % before;//if the operator is / we should rand a smaller number so we won't get a fraction
