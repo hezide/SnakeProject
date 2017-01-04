@@ -66,7 +66,7 @@ void Snake::shoot()
 }
 
 int Snake::hitSomething(Point next)//return 0 if the sanke hit himself, 1 if he hit the other snake, 2 if he hit a number
-{
+{                                  //3 if he hit his own bullet, 4 if he hit the other snake bullet
 	char ch;
 
 	ch = theGame->getBoard(1).getChFromBoard(next.getX(), next.getY());
@@ -77,6 +77,16 @@ int Snake::hitSomething(Point next)//return 0 if the sanke hit himself, 1 if he 
 		return 1;
 	else if (ch >= '0' && ch <= '9')
 		return 2;
+	else if (ch == '*')
+	{
+		for (int i = 0; i < 5; i++)
+		{
+			if (stack[i].isActive())
+				if (next == stack[i].next(stack[i].getDirection()))
+					return 3;
+		}
+		return 4;
+	}
 	else return -1;
 }
 
@@ -88,7 +98,6 @@ void Snake::disappear()
 		p.set(body[i].getX(), body[i].getY());
 		theGame->getBoard(1).insertCharToBoard(' ', p);
 	}
-
 }
 
 void Snake::returnAfterGetShot()
@@ -100,10 +109,11 @@ void Snake::returnAfterGetShot()
 			pos.set(rand() % 78, rand() % 22);
 		} while (!posIsOk(pos));//check if the new position of the snake is ok
 		setPosition(pos.getY(), pos.getX());
+		canMove = 1;
 	}
 }
 
-bool Snake::posIsOk(Point pos)
+bool Snake::posIsOk(Point pos)//check if the position of the snake after he return from shot is ok
 {
 	Number num;
 	char ch = theGame->getBoard(1).getChFromBoard(pos.getX(), pos.getY());
@@ -117,4 +127,14 @@ bool Snake::posIsOk(Point pos)
 	}
 	else
 		return false;
+}
+
+Bullet& Snake::findBulletByPos(Point pos)
+{
+	for (int i = 0; i < 5; i++)
+	{
+		if (stack[i].isActive())
+			if (stack[i].getX() == pos.getX() && stack[i].getY() == pos.getY())
+				return stack[i];
+	}
 }

@@ -98,5 +98,6 @@ public:
 	void disappear();
 	void returnAfterGetShot();
 	bool posIsOk(Point pos);
+	Bullet& findBulletByPos(Point pos);
 };
 #endif

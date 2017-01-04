@@ -284,7 +284,7 @@ void TheSnakesGame::foodIsEaten()
 
 void TheSnakesGame::moveBullets()
 {
-	Point pos;
+	Point nextPos,pos;
 	int hit;
 	for (int i = 0; i <= 1; i++) {
 		for (int j = 0; j < 5; j++) {
@@ -292,7 +292,7 @@ void TheSnakesGame::moveBullets()
 			if (s[i].getBulletFromStack(j).isActive()) {
 
 				pos.set(s[i].getBulletFromStack(j).getX(), s[i].getBulletFromStack(j).getY());
-
+				nextPos = pos;
 				gameBoard[0].insertCharToBoard(' ', pos);
 				s[i].getBulletFromStack(j).draw(' ');
 
@@ -329,6 +329,29 @@ void TheSnakesGame::moveBullets()
 					gameBoard[0].insertCharToBoard(' ', pos);
 					s[i].getBulletFromStack(j).draw(' ');
 				}
+				else if (hit == 3)//s[i] hit is own bullet
+				{
+					//first Bullet
+					s[i].getBulletFromStack(j).setActiveStatus(false);
+					gameBoard[0].insertCharToBoard(' ', pos);
+					s[i].getBulletFromStack(j).draw(' ');
+
+					//second Bullet
+					nextPos = pos.next(direction);
+					gameBoard[0].insertCharToBoard(' ', nextPos);
+					s[i].findBulletByPos(nextPos).draw(' ');
+					s[i].findBulletByPos(nextPos).setActiveStatus(false);
+				}
+				//else if (hit == 4)//s[i] hit the other snake bullet
+				//{
+				//	//s[i]
+				//	s[i].setScore(s[i].getScore() + 1);
+				//	s[i].setStackSize(s[i].getStackSize() + 1);
+				//	s[i].getBulletFromStack(j).setActiveStatus(false);
+				//	gameBoard[0].insertCharToBoard(' ', pos);
+				//	s[i].getBulletFromStack(j).draw(' ');
+				//	//s[(i+1)%2]
+				//}
 			}
 		}
 	}
