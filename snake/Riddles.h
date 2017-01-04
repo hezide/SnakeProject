@@ -4,7 +4,7 @@
 #include "Point.h"
 
 class Riddles {
-	enum{NUM_OF_RIDDLES=10,BLOCK_X=28,BLOCK_WIDTH=26};
+	enum{NUM_OF_RIDDLES=10,BLOCK_X=28,BLOCK_WIDTH=26,NUMRANGE=169};
 	enum {FIXGOTOXY = 5 ,COLS = 80};
 	char* riddleblock[6] = {
 	//	          10        20        30        40        50        60        70       79
@@ -47,7 +47,12 @@ public:
 			return false;
 	}
 private:
-//	void createComplexExercise();
+	void createComplexExercise();
+	int getRandomNumber(char op = ' ', int before = 0);
+	char getRandOperator();
+	int calcTwoNums(int num1, int num2, char op);
+	bool checkIfExerciseIsLegal(int numToSolve);
+	int	randWhiceNumShouldBeSolved(int left,int mid,int right,int sol);
 //	bool solveComplexExercise(int numToSolve);
 	bool solveIsEven(int numToSolve) {
 		if (numToSolve % 2 == 0)
