@@ -323,7 +323,7 @@ void TheSnakesGame::foodIsEaten()
 
 void TheSnakesGame::moveBullets(){
 	Point nextPos, pos;
-	int hit;
+	int hitNext, hit;
 	int direction;
 	for (int i = 0; i < 2; i++) {//each bullet move twice
 		for (int i = 0; i <= 1; i++) {//snake
@@ -334,17 +334,19 @@ void TheSnakesGame::moveBullets(){
 					pos.set(s[i].getBulletFromStack(j).getX(), s[i].getBulletFromStack(j).getY());
 					nextPos = pos.next(direction);
 
-					hit = s[i].hitSomething(nextPos);
-
-					handleWhatIsHit(i, j, pos, direction, hit);
+					hitNext = s[i].hitSomething(nextPos);//check the next position
+					hit = s[i].hitSomething(pos);//check the actual position
+					if (hit == 1 || hit == 0)//check if one of the snakes run over the bullet from the side
+						handleWhatIsHit(i, j, pos, direction, hit);
+					else
+						handleWhatIsHit(i, j, pos, direction, hitNext);
 				}
 			}
 		}
 	}
 }
 
-void TheSnakesGame::moveSingleBullet(int snake,int bullet, Point pos, int direction)
-				{
+void TheSnakesGame::moveSingleBullet(int snake,int bullet, Point pos, int direction){
 	Point nextPos = pos.next(direction);
 					gameBoard[0].insertCharToBoard(' ', pos);
 	s[snake].getBulletFromStack(bullet).draw(' ');
@@ -354,10 +356,10 @@ void TheSnakesGame::moveSingleBullet(int snake,int bullet, Point pos, int direct
 	setTextColor(s[snake].getColor());
 	s[snake].getBulletFromStack(bullet).draw('*');
 	setTextColor(Color::WHITE);
-				}
+}
 
 void TheSnakesGame::deleteSingleBulletFromBoard(int snake, int bullet, Point pos)
-				{
+{
 	gameBoard[0].insertCharToBoard(' ', pos);
 	s[snake].getBulletFromStack(bullet).draw(' ');
 }
@@ -371,7 +373,7 @@ void TheSnakesGame::handleWhatIsHit(int snake, int bullet, Point pos, int direct
 		s[snake].setCanMove(-5);
 		s[snake].disappear();
 		s[snake].getBulletFromStack(bullet).setActiveStatus(false);
-					gameBoard[0].insertCharToBoard(' ', pos);
+		gameBoard[0].insertCharToBoard(' ', pos);
 		s[snake].getBulletFromStack(bullet).draw(' ');
 	}
 	else if (hit == 1) {//s[i] hit the other snake
@@ -380,45 +382,42 @@ void TheSnakesGame::handleWhatIsHit(int snake, int bullet, Point pos, int direct
 		s[snake].setStackSize(s[snake].getStackSize() + 1);
 		s[snake].getBulletFromStack(bullet).setActiveStatus(false);
 		deleteSingleBulletFromBoard(snake, bullet, pos);
-		//std::swap(s[snake].getBulletFromStack(bullet), s[snake].getBulletFromStack(s[snake].getStackSize() - 1));
-				}
+	}
 	else if (hit == 2) {//s[i] hit a number
 					getBoard(1).removeNumber(getBoard(1).getNumber(pos.next(direction)));
 		s[snake].getBulletFromStack(bullet).setActiveStatus(false);
 		deleteSingleBulletFromBoard(snake, bullet, pos);
-				}
+	}
 	else if (hit == 3) {//s[i] hit is own bullet
 
 		if (s[snake].getBulletFromStack(bullet).getDirection() != s[snake].findBulletByPos(nextPos).getDirection()) {
 			//first Bullet-the hitting bullet
 			s[snake].getBulletFromStack(bullet).setActiveStatus(false);
 			deleteSingleBulletFromBoard(snake, bullet, pos);
-					//second Bullet
-					gameBoard[0].insertCharToBoard(' ', nextPos);
+			//second Bullet
+			gameBoard[0].insertCharToBoard(' ', nextPos);
 			s[snake].findBulletByPos(nextPos).draw(' ');
 			s[snake].findBulletByPos(nextPos).setActiveStatus(false);
-				}
+	}
 		else
 			moveSingleBullet(snake, bullet, pos, direction);
-				}
+	}
 	else if (hit == 4) {//s[i] hit the other snake bullet
-						//s[i]
+		//s[i]
 		s[snake].setStackSize(s[snake].getStackSize() + 1);
 		s[snake].getBulletFromStack(bullet).setActiveStatus(false);
 		deleteSingleBulletFromBoard(snake, bullet, pos);
-		//std::swap(s[snake].getBulletFromStack(bullet), s[snake].getBulletFromStack(s[snake].getStackSize() - 1));
 		//s[(i+1)%2]
 		s[(snake + 1) % 2].setStackSize(s[(snake + 1) % 2].getStackSize() + 1);
 		deleteSingleBulletFromBoard((snake + 1) % 2, bullet, pos);
 		s[(snake + 1) % 2].findBulletByPos(nextPos).setActiveStatus(false);
-		//std::swap(s[(snake + 1) % 2].getBulletFromStack(bullet), s[(snake + 1) % 2].getBulletFromStack(s[(snake + 1) % 2].getStackSize() - 1));
-			}
-		}
+	}
+}
 
 void TheSnakesGame::disappearSpecificSnake(int snake)
 {
 	s[snake].disappear();
-	}
+}
 
 void TheSnakesGame::canMoveSpecificSnake(int snake)
 {

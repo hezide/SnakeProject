@@ -1,5 +1,8 @@
 #include "Snake.h"
 #include "TheSnakesGame.h"
+#include <Windows.h>
+#include <MMSystem.h>
+#include <fstream>
 
 void Snake::setPosition(int y, int x)
 {
@@ -62,6 +65,12 @@ void Snake::shoot()
 	Point pos;
 	if (stackSize > 0) {
 		if (canMove > 0) {
+
+			if (std::ifstream("shoot.wav"))
+				PlaySound(TEXT("shoot.wav"), NULL, SND_ASYNC);
+			else
+				PlaySound(TEXT("shoot.wav"), NULL, SND_NODEFAULT);
+
 			pos.set(getSnakeHead().next(direction).getX(), getSnakeHead().next(direction).getY());
 			if (hitSomething(pos) == 1)
 			{
@@ -92,7 +101,6 @@ void Snake::shoot()
 int Snake::hitSomething(Point next)//return 0 if the sanke hit himself, 1 if he hit the other snake, 2 if he hit a number
 {                                  //3 if he hit his own bullet, 4 if he hit the other snake bullet
 	char ch;
-
 	ch = theGame->getBoard(1).getChFromBoard(next.getX(), next.getY());
 
 	if (ch==symbol)
