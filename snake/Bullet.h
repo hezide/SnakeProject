@@ -27,6 +27,11 @@ public:
 	int getDirection() {
 		return direction;
 	}
+	Point getPos() {
+		Point pos;
+		pos.set(Point::getX(),Point::getY());
+		return pos;
+	}
 };
 
 #endif

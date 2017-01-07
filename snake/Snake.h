@@ -96,8 +96,10 @@ public:
 	}
 	int hitSomething(Point next);
 	void disappear();
-	void returnAfterGetShot();
-	bool posIsOk(Point pos);
+	void returnAfterGetShot();//return the snake the the game only after 5 numbers came up
+	bool posIsOk(Point pos);//for the the snake to return
 	Bullet& findBulletByPos(Point pos);
+	void unActiveAllBullets();//delete all the bullets on the screen make them un active and give the player 5 bullets again
+	void printStackStats();
 };
 #endif

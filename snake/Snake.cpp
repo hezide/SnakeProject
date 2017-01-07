@@ -32,7 +32,10 @@ void Snake::move() {
 int Snake::getDirection(char key) {
 	for (int i = 0; i < 5; ++i) {
 		if (key == arrowKeys[i]) {
-			return i;
+			if (i == 4)
+				shoot();
+			else
+				return i;
 		}
 	}
 	return -1;
@@ -55,13 +58,34 @@ int Snake::nextStepIsPossible()//return 2 if the snake hit the other snake, 3 if
 
 void Snake::shoot()
 {
+	char ch;
 	Point pos;
 	if (stackSize > 0) {
-		stack[--stackSize].init(color,direction);//initialize the bullets parameters according to the appropriate snake
-		pos.set(getSnakeHead().getX(), getSnakeHead().getY());
-		pos.move(direction);
-		stack[stackSize].set(pos.getX(),pos.getY());
-		stack[stackSize].setActiveStatus(true);//once the bullet was shot, it's status becomes active
+		if (canMove > 0) {
+			pos.set(getSnakeHead().next(direction).getX(), getSnakeHead().next(direction).getY());
+			if (hitSomething(pos) == 1)
+			{
+				ch=theGame->getBoard(1).getChFromBoard(pos.getX(), pos.getY());
+				if (ch == '@') {
+					theGame->disappearSpecificSnake(0);
+					theGame->canMoveSpecificSnake(0);
+				}
+				else if (ch == '#') {
+					theGame->disappearSpecificSnake(1);
+					theGame->canMoveSpecificSnake(1);
+				}
+			}
+			else {
+				for (int i = 0; i < 5;i++)
+					if (!stack[i].isActive()) {
+						stack[i].init(color, direction);//initialize the bullets parameters according to the appropriate snake
+						stack[i].set(pos.getX(), pos.getY());
+						stack[i].setActiveStatus(true);//once the bullet was shot, it's status becomes active
+						stackSize--;
+						break;
+					}
+			}
+		}
 	}
 }
 
@@ -82,7 +106,7 @@ int Snake::hitSomething(Point next)//return 0 if the sanke hit himself, 1 if he 
 		for (int i = 0; i < 5; i++)
 		{
 			if (stack[i].isActive())
-				if (next == stack[i].next(stack[i].getDirection()))
+				if (next == stack[i].getPos())
 					return 3;
 		}
 		return 4;
@@ -137,4 +161,32 @@ Bullet& Snake::findBulletByPos(Point pos)
 			if (stack[i].getX() == pos.getX() && stack[i].getY() == pos.getY())
 				return stack[i];
 	}
+	return stack[0];//not sopposed to get here
+}
+
+void Snake::unActiveAllBullets()
+{
+	
+	for (int i = 0; i < 5; i++) {
+		theGame->getBoard(1).insertCharToBoard(' ', stack[i].getPos());
+		stack[i].draw(' ');
+		stack[i].setActiveStatus(false);
+	}
+	stackSize = 5;
+	canMove = 1;
+}
+
+void Snake::printStackStats()
+{
+	int bullets = stackSize;
+	cout << '[';
+	for (int i = 0; i < 5; i++) {
+		if (bullets > 0) {
+			cout << '*';
+			bullets--;
+		}
+		else
+			cout << ' ';
+	}
+	cout << ']';
 }

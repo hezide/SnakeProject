@@ -56,6 +56,11 @@ public:
 	}
 	void foodIsEaten();
 	void moveBullets();
+	void moveSingleBullet(int snake,int bullet, Point pos, int direction);
+	void deleteSingleBulletFromBoard(int snake, int bullet, Point Pos);
+	void handleWhatIsHit(int snake,int bullet,Point pos,int direction,int hit);
+	void disappearSpecificSnake(int snake);
+	void canMoveSpecificSnake(int snake);
 };
 
 #endif
