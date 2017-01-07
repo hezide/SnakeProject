@@ -409,7 +409,7 @@ void TheSnakesGame::handleWhatIsHit(int snake, int bullet, Point pos, int direct
 		deleteSingleBulletFromBoard(snake, bullet, pos);
 		//s[(i+1)%2]
 		s[(snake + 1) % 2].setStackSize(s[(snake + 1) % 2].getStackSize() + 1);
-		deleteSingleBulletFromBoard((snake + 1) % 2, bullet, pos);
+		deleteSingleBulletFromBoard((snake + 1) % 2, bullet, nextPos);
 		s[(snake + 1) % 2].findBulletByPos(nextPos).setActiveStatus(false);
 	}
 }

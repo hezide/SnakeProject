@@ -71,7 +71,7 @@ void Snake::shoot()
 				PlaySound(TEXT("shoot.wav"), NULL, SND_NODEFAULT);
 
 			pos.set(getSnakeHead().next(direction).getX(), getSnakeHead().next(direction).getY());
-			for (int i = 0; i < 5; i++) {
+			for (int i = 0; i < 5; i++) {//finding the next bullet in the stack that is un active
 				if (!stack[i].isActive()) {
 					stack[i].init(color, direction);//initialize the bullets parameters according to the appropriate snake
 					stack[i].set(pos.getX(), pos.getY());
