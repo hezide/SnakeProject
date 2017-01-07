@@ -23,6 +23,7 @@ void TheSnakesGame::init() {
 	s[1].setSize(3);
 
 	currRiddle = 0;
+	riddleArray.createComplexExercise();
 	menu.routePrintMenu('b');//print a blank board
 }
 
@@ -76,7 +77,7 @@ void TheSnakesGame::run() {
 		s[1].returnAfterGetShot();
 		s[1].move();
 
-		Sleep(150);
+		Sleep(100);
 
 		fiveMoves++;
 		if (fiveMoves % 5 == 0) {//check if we need to add another number to board
@@ -152,10 +153,12 @@ void TheSnakesGame::secondaryMenu() {
 		break;
 	//Start new stage
 	case '5':
-		currRiddle = (currRiddle + 1) % NUM_OF_RIDDLES;
-		gameBoard[0].clearHalfOfTheNumbers();
-		gameBoard->printBoard();//print the board again because it has the paused message printed
-		menu.routePrintMenu('b');
+		changeToNextRiddle();
+/*		currRiddle = (currRiddle + 1) % NUM_OF_RIDDLES;
+		gameBoard[0].clearHalfOfTheNumbers();*/
+//		gameBoard->printBoard();//print the board again because it has the paused message printed
+//		menu.routePrintMenu('b');
+		/*REMEMBER TO DELETE*/
 		run();
 		break;
 	//start New Game
@@ -163,6 +166,26 @@ void TheSnakesGame::secondaryMenu() {
 		init();
 		gameBoard[0].resetBoard();
 		gameBoard[0].printBoard();
+		run();
+		break;
+	case 'c':
+		int cheatNum;
+		/*place the cursor in the currect location*/
+		gotoxy(40, 4 - FIXGOTOXY);
+		cout << "      ";//erase whatever is there and then return to the same position
+		gotoxy(40, 4 - FIXGOTOXY);
+		setTextColor(Color::RED);
+		cout << " Cheat Unlocked! insert number: " ;
+		setTextColor(Color::WHITE);
+		cin >> cheatNum;
+
+		if (cheatNum == -1)
+			gameBoard[0].insertRndNumberToFood(riddleArray.getExerciseSolution());//insert to the board the exercise's solution
+		else
+			gameBoard[0].insertRndNumberToFood(cheatNum);
+
+		gameBoard->printBoard();//print the board again because it has the paused message printed
+		menu.routePrintMenu('b');
 		run();
 		break;
 	default:
@@ -194,6 +217,9 @@ void TheSnakesGame::findMatchingNumbers(){
 void TheSnakesGame::changeToNextRiddle()
 {
 	currRiddle = (currRiddle + 1 )%NUM_OF_RIDDLES;
+	if (currRiddle == 0)
+		riddleArray.createComplexExercise();
+	menu.routePrintMenu('b');
 	riddleArray.printRiddle(currRiddle);
 	gameBoard[0].clearHalfOfTheNumbers();
 	Sleep(500);
@@ -274,6 +300,7 @@ void TheSnakesGame::foodIsEaten()
 				Sleep(1000);
 				gameBoard[0].printBoard();
 				findMatchingNumbers();
+				Sleep(500);
 			}
 			gameBoard[0].removeNumber(eatenNum);
 

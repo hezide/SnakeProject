@@ -1,7 +1,9 @@
 #ifndef _RIDDLES_
 #define _RIDDLES_
+#define _CRT_SECURE_NO_WARNINGS
 
 #include "Point.h"
+#include <string>
 
 class Riddles {
 	enum{NUM_OF_RIDDLES=10,BLOCK_X=28,BLOCK_WIDTH=26,NUMRANGE=169};
@@ -17,7 +19,7 @@ class Riddles {
 		"++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++"  // 5
 	//   0123456789012345678901234567890123456789012345678901234567890123456789012345678																					//   01234567890123456789012345678901234567890123456789012345678901234567890123456789
 	};
-	char* riddleNames[NUM_OF_RIDDLES] = {
+	char riddleNames[NUM_OF_RIDDLES][80] = {
 		{"                                                                              "},
 		{"                             Collect Even Number                              "},
 		{"                             Collect Prime Number                             "},
@@ -29,16 +31,14 @@ class Riddles {
 		{"                           Collect number that is power of 4                  "},
 		{"                         Collect number that can divide 16                    "}
 	};
-
+	int exerciseSolution;
 public:
 	bool solveRiddle(int numOfRiddle, int numToSolve);
 	void printBlock();
 	void printRiddle(int currRiddle) {
-		if (currRiddle == 0)
-			//createComplexExercise();
 		gotoxy(1, -FIXGOTOXY + 4);
 		printf("%s", riddleNames[currRiddle]);
-		Sleep(500);
+//		Sleep(500);
 	}
 	bool endOfRiddles(int currRiddle) {
 		if (currRiddle == NUM_OF_RIDDLES)
@@ -46,14 +46,26 @@ public:
 		else
 			return false;
 	}
-private:
 	void createComplexExercise();
+	int getExerciseSolution() {
+		return exerciseSolution;
+	}
+private:
+
 	int getRandomNumber(char op = ' ', int before = 0);
 	char getRandOperator();
 	int calcTwoNums(int num1, int num2, char op);
-	bool checkIfExerciseIsLegal(int numToSolve);
-	int	randWhiceNumShouldBeSolved(int left,int mid,int right,int sol);
-//	bool solveComplexExercise(int numToSolve);
+	bool checkIfExerciseIsLegal(const int numToSolve,int sol);
+	bool divisionCase(int num1, int num2) {
+		if (num2 == 0)
+			return false;
+		else if (num1%num2 != 0)
+			return false;
+		else
+			return true;
+	}
+	int* randWhiceNumShouldBeSolved(int* left,int* mid,int* right,int* sol);
+	void createTheExcerciseString(int* left, int* mid, int* right, int* sol, int* numToSolve, char op1, char op2);
 	bool solveIsEven(int numToSolve) {
 		if (numToSolve % 2 == 0)
 			return true;
