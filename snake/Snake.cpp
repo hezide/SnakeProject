@@ -61,38 +61,24 @@ int Snake::nextStepIsPossible()//return 2 if the snake hit the other snake, 3 if
 
 void Snake::shoot()
 {
-	char ch;
 	Point pos;
 	if (stackSize > 0) {
 		if (canMove > 0) {
 
-			if (std::ifstream("shoot.wav"))
+			if (std::ifstream("shoot.wav"))//shoot sound
 				PlaySound(TEXT("shoot.wav"), NULL, SND_ASYNC);
 			else
 				PlaySound(TEXT("shoot.wav"), NULL, SND_NODEFAULT);
 
 			pos.set(getSnakeHead().next(direction).getX(), getSnakeHead().next(direction).getY());
-			if (hitSomething(pos) == 1)
-			{
-				ch=theGame->getBoard(1).getChFromBoard(pos.getX(), pos.getY());
-				if (ch == '@') {
-					theGame->disappearSpecificSnake(0);
-					theGame->canMoveSpecificSnake(0);
+			for (int i = 0; i < 5; i++) {
+				if (!stack[i].isActive()) {
+					stack[i].init(color, direction);//initialize the bullets parameters according to the appropriate snake
+					stack[i].set(pos.getX(), pos.getY());
+					stack[i].setActiveStatus(true);//once the bullet was shot, it's status becomes active
+					stackSize--;
+					break;
 				}
-				else if (ch == '#') {
-					theGame->disappearSpecificSnake(1);
-					theGame->canMoveSpecificSnake(1);
-				}
-			}
-			else {
-				for (int i = 0; i < 5;i++)
-					if (!stack[i].isActive()) {
-						stack[i].init(color, direction);//initialize the bullets parameters according to the appropriate snake
-						stack[i].set(pos.getX(), pos.getY());
-						stack[i].setActiveStatus(true);//once the bullet was shot, it's status becomes active
-						stackSize--;
-						break;
-					}
 			}
 		}
 	}

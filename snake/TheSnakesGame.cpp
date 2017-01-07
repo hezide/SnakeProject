@@ -384,7 +384,7 @@ void TheSnakesGame::handleWhatIsHit(int snake, int bullet, Point pos, int direct
 		deleteSingleBulletFromBoard(snake, bullet, pos);
 	}
 	else if (hit == 2) {//s[i] hit a number
-					getBoard(1).removeNumber(getBoard(1).getNumber(pos.next(direction)));
+		getBoard(1).removeNumber(getBoard(1).getNumber(pos.next(direction)));
 		s[snake].getBulletFromStack(bullet).setActiveStatus(false);
 		deleteSingleBulletFromBoard(snake, bullet, pos);
 	}
