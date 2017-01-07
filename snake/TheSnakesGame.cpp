@@ -168,7 +168,7 @@ void TheSnakesGame::secondaryMenu() {
 		gameBoard[0].printBoard();
 		run();
 		break;
-	case 'c':
+	case 'c'://Cheat to insert the number you want to the board
 		int cheatNum;
 		/*place the cursor in the currect location*/
 		gotoxy(40, 4 - FIXGOTOXY);
