@@ -37,7 +37,6 @@ public:
 	Riddles getRiddles() {
 		return riddleArray;
 	}
-
 	int getCurrRiddle()
 	{
 		return currRiddle;

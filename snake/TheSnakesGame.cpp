@@ -152,6 +152,7 @@ void TheSnakesGame::secondaryMenu() {
 		break;
 	//Start new stage
 	case '5':
+		menu.routePrintMenu('b');
 		changeToNextRiddle();
 		s[0].unActiveAllBullets();
 		s[1].unActiveAllBullets();
@@ -218,7 +219,6 @@ void TheSnakesGame::changeToNextRiddle()
 	currRiddle = (currRiddle + 1 )%NUM_OF_RIDDLES;
 	if (currRiddle == 0)
 		riddleArray.createComplexExercise();
-	menu.routePrintMenu('b');
 	riddleArray.printRiddle(currRiddle);
 	gameBoard[0].clearHalfOfTheNumbers();
 	Sleep(500);
