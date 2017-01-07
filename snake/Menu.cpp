@@ -63,6 +63,8 @@ char Menu::secondaryMenuGetInput() {
 		return selection;
 	case '6':
 		return selection;
+	case 'c':
+		return selection;
 	default:
 		secondaryMenuGetInput();
 	}

@@ -17,7 +17,7 @@ void Board::printBoard() {
 }
 
 
-void Board::insertRndNumberToFood()
+void Board::insertRndNumberToFood(int cheat)
 {
 	Point pos;
 	int numOfDigits, numToInsert, groupOfNumbers;
@@ -35,7 +35,8 @@ void Board::insertRndNumberToFood()
 		numToInsert = rand() % 88 + 82;
 		break;
 	}
-
+	if (cheat != -1)
+		numToInsert = cheat;
 	food[foodSize].setNum(numToInsert);
 
 	numOfDigits = food[foodSize].calcNumOfDigits();

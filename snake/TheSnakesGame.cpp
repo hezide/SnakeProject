@@ -25,6 +25,7 @@ void TheSnakesGame::init() {
 	s[1].unActiveAllBullets();
 
 	currRiddle = 0;
+	riddleArray.createComplexExercise();
 	menu.routePrintMenu('b');//print a blank board
 }
 
@@ -151,12 +152,10 @@ void TheSnakesGame::secondaryMenu() {
 		break;
 	//Start new stage
 	case '5':
-		currRiddle = (currRiddle + 1) % NUM_OF_RIDDLES;
-		gameBoard[0].clearHalfOfTheNumbers();
+		changeToNextRiddle();
 		s[0].unActiveAllBullets();
 		s[1].unActiveAllBullets();
-		gameBoard->printBoard();//print the board again because it has the paused message printed
-		menu.routePrintMenu('b');
+
 		run();
 		break;
 	//start New Game
@@ -164,6 +163,26 @@ void TheSnakesGame::secondaryMenu() {
 		init();
 		gameBoard[0].resetBoard();
 		gameBoard[0].printBoard();
+		run();
+		break;
+	case 'c'://Cheat to insert the number you want to the board
+		int cheatNum;
+		/*place the cursor in the currect location*/
+		gotoxy(40, 4 - FIXGOTOXY);
+		cout << "      ";//erase whatever is there and then return to the same position
+		gotoxy(40, 4 - FIXGOTOXY);
+		setTextColor(Color::RED);
+		cout << " Cheat Unlocked! insert number: " ;
+		setTextColor(Color::WHITE);
+		cin >> cheatNum;
+
+		if (cheatNum == -1)
+			gameBoard[0].insertRndNumberToFood(riddleArray.getExerciseSolution());//insert to the board the exercise's solution
+		else
+			gameBoard[0].insertRndNumberToFood(cheatNum);
+
+		gameBoard->printBoard();//print the board again because it has the paused message printed
+		menu.routePrintMenu('b');
 		run();
 		break;
 	default:
@@ -197,6 +216,9 @@ void TheSnakesGame::changeToNextRiddle()
 	s[0].unActiveAllBullets();
 	s[1].unActiveAllBullets();
 	currRiddle = (currRiddle + 1 )%NUM_OF_RIDDLES;
+	if (currRiddle == 0)
+		riddleArray.createComplexExercise();
+	menu.routePrintMenu('b');
 	riddleArray.printRiddle(currRiddle);
 	gameBoard[0].clearHalfOfTheNumbers();
 	Sleep(500);
@@ -291,6 +313,7 @@ void TheSnakesGame::foodIsEaten()
 				Sleep(1000);
 				gameBoard[0].printBoard();
 				findMatchingNumbers();
+				Sleep(500);
 			}
 			gameBoard[0].removeNumber(eatenNum);
 			changeToNextRiddle();//change to the next riddle in the array
@@ -305,7 +328,7 @@ void TheSnakesGame::moveBullets(){
 	for (int i = 0; i < 2; i++) {//each bullet move twice
 		for (int i = 0; i <= 1; i++) {//snake
 			for (int j = 0; j < 5; j++) {//bullets of each snake
-				if (s[i].getBulletFromStack(j).isActive()) {
+			if (s[i].getBulletFromStack(j).isActive()) {
 
 					direction = s[i].getBulletFromStack(j).getDirection();
 					pos.set(s[i].getBulletFromStack(j).getX(), s[i].getBulletFromStack(j).getY());
@@ -321,9 +344,9 @@ void TheSnakesGame::moveBullets(){
 }
 
 void TheSnakesGame::moveSingleBullet(int snake,int bullet, Point pos, int direction)
-{
+				{
 	Point nextPos = pos.next(direction);
-	gameBoard[0].insertCharToBoard(' ', pos);
+					gameBoard[0].insertCharToBoard(' ', pos);
 	s[snake].getBulletFromStack(bullet).draw(' ');
 
 	s[snake].getBulletFromStack(bullet).move(direction);
@@ -331,10 +354,10 @@ void TheSnakesGame::moveSingleBullet(int snake,int bullet, Point pos, int direct
 	setTextColor(s[snake].getColor());
 	s[snake].getBulletFromStack(bullet).draw('*');
 	setTextColor(Color::WHITE);
-}
+				}
 
 void TheSnakesGame::deleteSingleBulletFromBoard(int snake, int bullet, Point pos)
-{
+				{
 	gameBoard[0].insertCharToBoard(' ', pos);
 	s[snake].getBulletFromStack(bullet).draw(' ');
 }
@@ -348,7 +371,7 @@ void TheSnakesGame::handleWhatIsHit(int snake, int bullet, Point pos, int direct
 		s[snake].setCanMove(-5);
 		s[snake].disappear();
 		s[snake].getBulletFromStack(bullet).setActiveStatus(false);
-		gameBoard[0].insertCharToBoard(' ', pos);
+					gameBoard[0].insertCharToBoard(' ', pos);
 		s[snake].getBulletFromStack(bullet).draw(' ');
 	}
 	else if (hit == 1) {//s[i] hit the other snake
@@ -358,26 +381,26 @@ void TheSnakesGame::handleWhatIsHit(int snake, int bullet, Point pos, int direct
 		s[snake].getBulletFromStack(bullet).setActiveStatus(false);
 		deleteSingleBulletFromBoard(snake, bullet, pos);
 		//std::swap(s[snake].getBulletFromStack(bullet), s[snake].getBulletFromStack(s[snake].getStackSize() - 1));
-	}
+				}
 	else if (hit == 2) {//s[i] hit a number
-		getBoard(1).removeNumber(getBoard(1).getNumber(pos.next(direction)));
+					getBoard(1).removeNumber(getBoard(1).getNumber(pos.next(direction)));
 		s[snake].getBulletFromStack(bullet).setActiveStatus(false);
 		deleteSingleBulletFromBoard(snake, bullet, pos);
-	}
+				}
 	else if (hit == 3) {//s[i] hit is own bullet
 
 		if (s[snake].getBulletFromStack(bullet).getDirection() != s[snake].findBulletByPos(nextPos).getDirection()) {
 			//first Bullet-the hitting bullet
 			s[snake].getBulletFromStack(bullet).setActiveStatus(false);
 			deleteSingleBulletFromBoard(snake, bullet, pos);
-			//second Bullet
-			gameBoard[0].insertCharToBoard(' ', nextPos);
+					//second Bullet
+					gameBoard[0].insertCharToBoard(' ', nextPos);
 			s[snake].findBulletByPos(nextPos).draw(' ');
 			s[snake].findBulletByPos(nextPos).setActiveStatus(false);
-		}
+				}
 		else
 			moveSingleBullet(snake, bullet, pos, direction);
-	}
+				}
 	else if (hit == 4) {//s[i] hit the other snake bullet
 						//s[i]
 		s[snake].setStackSize(s[snake].getStackSize() + 1);
@@ -389,13 +412,13 @@ void TheSnakesGame::handleWhatIsHit(int snake, int bullet, Point pos, int direct
 		deleteSingleBulletFromBoard((snake + 1) % 2, bullet, pos);
 		s[(snake + 1) % 2].findBulletByPos(nextPos).setActiveStatus(false);
 		//std::swap(s[(snake + 1) % 2].getBulletFromStack(bullet), s[(snake + 1) % 2].getBulletFromStack(s[(snake + 1) % 2].getStackSize() - 1));
-	}
-}
+			}
+		}
 
 void TheSnakesGame::disappearSpecificSnake(int snake)
 {
 	s[snake].disappear();
-}
+	}
 
 void TheSnakesGame::canMoveSpecificSnake(int snake)
 {

@@ -36,7 +36,7 @@ public:
 	{
 		foodSize = size;
 	}
-	void insertRndNumberToFood();
+	void insertRndNumberToFood(int cheat=-1);
 
 	void insertNumToBoard(Number num);
 	void printNumbers();

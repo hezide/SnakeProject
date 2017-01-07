@@ -4,7 +4,10 @@ bool Riddles::solveRiddle(int numOfRiddle, int numToSolve)
 {
 	switch (numOfRiddle) {
 	case 0:
-		//return solveComplexExercise(numToSolve);
+		if (numToSolve == exerciseSolution)
+			return true;
+		else
+			return false;
 		break;
 	case 1:
 		return solveIsEven(numToSolve);
@@ -53,7 +56,7 @@ void Riddles::createComplexExercise()
 	char op1, op2;
 	int left, mid, right, sol;
 	int leftMid, midRight;
-	int numToSolve;
+	int* numToSolve=NULL;
 	bool isLegalExercise;
 
 	do {
@@ -64,29 +67,55 @@ void Riddles::createComplexExercise()
 		left = getRandomNumber();
 		mid = getRandomNumber(op1, left);
 		right = getRandomNumber(op2, mid);
-
+		sol = 0;
+		isLegalExercise = true;
 		/*CALCULATE THE EXERCISE BY LEGAL MATH ORDER*/
-		if (op1 == '*' || op1 == '/') {
-			leftMid = calcTwoNums(left, mid, op1);
-			sol = calcTwoNums(leftMid, right, op2);
+		{
+			if (op1 == '*' || op1 == '/') {
+				
+				if (op1 == '/')
+					isLegalExercise = divisionCase(left, mid);
+
+				if (isLegalExercise) {
+					leftMid = calcTwoNums(left, mid, op1);
+					if (op2 == '/')
+						isLegalExercise = divisionCase(leftMid, right);
+
+					if (isLegalExercise)
+						sol = calcTwoNums(leftMid, right, op2);
+				}
+			}
+			else if (op2 == '*' || op2 == '/') {
+
+				if (op2 == '/')
+					isLegalExercise = divisionCase(mid, right);
+				if (isLegalExercise) {
+					midRight = calcTwoNums(mid, right, op2);
+
+					if (op2 == '/')
+						isLegalExercise = divisionCase(left, midRight);
+
+					if (isLegalExercise)
+						sol = calcTwoNums(left, midRight, op1);
+				}
+			}
+			else {
+				leftMid = calcTwoNums(left, mid, op1);
+				sol = calcTwoNums(leftMid, right, op2);
+			}
 		}
-		else if (op2 == '*' || op2 == '/') {
-			midRight = calcTwoNums(mid, right, op2);
-			sol = calcTwoNums(sol, midRight, op1);
-		}
-		else {
-			leftMid = calcTwoNums(left, mid, op1);
-			sol = calcTwoNums(leftMid, right, op2);
-		}
-		numToSolve=randWhiceNumShouldBeSolved(left, mid, right, sol);
-		isLegalExercise = checkIfExerciseIsLegal(numToSolve);
+		numToSolve=randWhiceNumShouldBeSolved(&left, &mid, &right, &sol);
+		if (isLegalExercise)
+			isLegalExercise = checkIfExerciseIsLegal(*numToSolve,sol);
+
 	} while (!isLegalExercise);
-
-
+	exerciseSolution = *numToSolve;
+	createTheExcerciseString(&left, &mid, &right, &sol, numToSolve, op1, op2);
 }
+
 int Riddles::getRandomNumber(char op ,int before) {
 	int num;
-	if (op == '/')
+	if (op == '/' && before!=0)
 		num = rand() % before;//if the operator is / we should rand a smaller number so we won't get a fraction
 	else
 		num = rand() % NUMRANGE;
@@ -110,6 +139,9 @@ char Riddles::getRandOperator()
 	case 3:
 		return '/';
 		break;
+	default:
+		return 0;
+		break;
 	}
 }
 
@@ -128,18 +160,21 @@ int Riddles::calcTwoNums(int num1, int num2, char op)
 	case '/':
 		return num1 / num2;
 		break;
+	default:
+		return 0;
+		break;
 	}
 }
 
-bool Riddles::checkIfExerciseIsLegal(int numToSolve)
+bool Riddles::checkIfExerciseIsLegal(const int numToSolve,int sol)
 {
-	if (numToSolve<0 || numToSolve>NUMRANGE)
+	if (numToSolve<0 || numToSolve>NUMRANGE || sol<0||sol>NUMRANGE)
 		return false;
 	else
 		return true;
 }
 
-int Riddles::randWhiceNumShouldBeSolved(int left, int mid, int right, int sol)
+int* Riddles::randWhiceNumShouldBeSolved(int* left, int* mid, int* right, int* sol)
 {
 	short int num;
 	num = rand() % 4;
@@ -156,5 +191,76 @@ int Riddles::randWhiceNumShouldBeSolved(int left, int mid, int right, int sol)
 	case 3:
 		return sol;
 		break;
+	default:
+		return 0;
+		break;
 	}
+}
+
+void Riddles::createTheExcerciseString(int * left, int * mid, int * right, int * sol, int * numToSolve, char op1, char op2)
+{
+	size_t i,count;
+	char temp[5] = "    ";
+
+	for (i = 0; i < 32; i++)
+		riddleNames[0][i] = ' ';
+	riddleNames[0][i] = '\0';
+
+	if (left == numToSolve) {
+		sprintf(riddleNames[0] + i, "___");
+		i += 3;
+	}
+	else {
+		_itoa(*left, temp, 10);
+		count = strlen(temp);
+		sprintf(riddleNames[0] + i, temp);
+		i += count;
+	}
+
+	riddleNames[0][i] = op1;
+	i++;
+	riddleNames[0][i] = '\0';
+	if (mid == numToSolve) {
+		sprintf(riddleNames[0] + i, "___");
+		i += 3;
+	}
+	else {
+		_itoa(*mid, temp, 10);
+		count = strlen(temp);
+		sprintf(riddleNames[0] + i, temp);
+		i += count;
+	}
+
+	riddleNames[0][i] = op2;
+	i++;
+	riddleNames[0][i] = '\0';
+	if (right == numToSolve) {
+		sprintf(riddleNames[0] + i, "___");
+		i += 3;
+	}
+	else {
+		_itoa(*right, temp, 10);
+		count = strlen(temp);
+		sprintf(riddleNames[0] + i, temp);
+		i += count;
+	}
+	riddleNames[0][i] = '=';
+	i++;
+	riddleNames[0][i] = '\0';
+	if (sol == numToSolve) {
+		sprintf(riddleNames[0] + i, "___");
+		i += 3;
+	}
+	else {
+		_itoa(*sol, temp, 10);
+		count = strlen(temp);
+		sprintf(riddleNames[0] + i, temp);
+		i += count;
+	}
+	while (i < 79) {
+		riddleNames[0][i] = ' ';
+		i++;
+	}
+	riddleNames[0][i] = '\0';
+
 }

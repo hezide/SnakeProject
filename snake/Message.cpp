@@ -39,6 +39,7 @@ void Message::routePrintMessage(char type) {
 		printSmallSizeMessage(player2AnsweredWrong);
 		break;
 	}
+	Sleep(500);
 }
 
 void Message::printFullSizeMessage(const char** message) {
