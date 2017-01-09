@@ -11,9 +11,6 @@ class Bullet :public Point {
 	bool active=false;
 
 public:
-	//void insertBulletToBoard();
-	//void removeBulletFromBoard();
-	//void init();
 	void setActiveStatus(bool val) {
 		active = val;
 	}

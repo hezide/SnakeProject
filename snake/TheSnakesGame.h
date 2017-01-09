@@ -8,7 +8,6 @@
 #include "Message.h"
 #include "Riddles.h"
 
-
 class TheSnakesGame {
 	enum { ESC = 27, FIXGOTOXY = 5};
 	enum{PLAYER_1_LOC_X=1,PLAYER_1_LOC_Y=1};//player 1 Name Location
@@ -50,6 +49,10 @@ public:
 	void printPlayersStats();
 	void printPlayersScores();
 	bool whoWins();
+	void checkOppositeDir(int num, char key, int dir) {
+		if (!s[num].oppositeDir(key))
+			s[num].setDirection(dir);
+	}
 	Message getMessage() {
 		return message;
 	}

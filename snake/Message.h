@@ -6,7 +6,7 @@
 class Message {
 	enum { FULL_MESSAGE_ROWS = 20, FULL_MESSAGE_COLS = 80, SMALL_MESSAGE_ROWS=5,SMALL_MESSAGE_COLS=28};
 	enum {FIX_GOTO_X_Y_ROWS=7, FIX_GOTO_X_Y_COLS=26};//enum of small message location
-	const char* gamePaused[SMALL_MESSAGE_ROWS]{
+	const char gamePaused[SMALL_MESSAGE_ROWS][SMALL_MESSAGE_COLS+1]{
 	//	          10        20         
 	//	 0123456789012345678901234567
 		"++++++++++++++++++++++++++++", // 0
@@ -16,7 +16,7 @@ class Message {
 		"++++++++++++++++++++++++++++"  // 4
 	//   0123456789012345678901234567
 	};
-	const char* byeBye[SMALL_MESSAGE_ROWS]{
+	const char byeBye[SMALL_MESSAGE_ROWS][SMALL_MESSAGE_COLS+1]{
 		//	          10        20         
 		//	 0123456789012345678901234567
 		"++++++++++++++++++++++++++++", // 0
@@ -26,7 +26,7 @@ class Message {
 		"++++++++++++++++++++++++++++"  // 4
 	//   0123456789012345678901234567
 	};
-	const char* noMatchingNumbers[SMALL_MESSAGE_ROWS]{
+	const char noMatchingNumbers[SMALL_MESSAGE_ROWS][SMALL_MESSAGE_COLS + 1]{
 		//	          10        20         
 		//	 0123456789012345678901234567
 		"++++++++++++++++++++++++++++", // 0
@@ -36,7 +36,7 @@ class Message {
 		"++++++++++++++++++++++++++++"  // 4
 	//   0123456789012345678901234567
 	};
-	const char* welcome[FULL_MESSAGE_ROWS]{
+	const char welcome[FULL_MESSAGE_ROWS][FULL_MESSAGE_COLS+1]{
 		//           10        20        30        40        50        60        70       79
 		//  01234567890123456789012345678901234567890123456789012345678901234567890123456789
 		"++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++", // 0
@@ -61,7 +61,7 @@ class Message {
 		"++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++"  // 23
 																							//   01234567890123456789012345678901234567890123456789012345678901234567890123456789 
 	};
-	const char* instructions[FULL_MESSAGE_ROWS]{
+	const char instructions[FULL_MESSAGE_ROWS][FULL_MESSAGE_COLS + 1]{
 	//	          10        20        30        40        50        60        70       79
 	//	 01234567890123456789012345678901234567890123456789012345678901234567890123456789
 		"++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++", // 0
@@ -80,13 +80,13 @@ class Message {
 		"+  - Be carful not to get stuck in your self or you will stay stuck to the     +", // 13
 		"+    end of the game.                                                          +", // 14
 		"+                                                                              +", // 15
-		"+  - Player 1 keys: w=Up, d=Right, x=Down, a=Left                              +", // 16
+		"+  - Player 1 keys: w=Up, d=Right, x=Down, a=Left, z=shoot                     +", // 16
 		"+                                                                              +", // 17
-		"+  - Player 2 keys: i=Up, l=Right, m=Down, j=Left                              +", // 18
+		"+  - Player 2 keys: i=Up, l=Right, m=Down, j=Left, n=shoot                     +", // 18
 		"++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++"  // 23
 	//   01234567890123456789012345678901234567890123456789012345678901234567890123456789   
 	};
-	const char* player1Wins[SMALL_MESSAGE_ROWS]{
+	const char player1Wins[SMALL_MESSAGE_ROWS][SMALL_MESSAGE_COLS + 1]{
 		//	          10        20         
 		//	 0123456789012345678901234567
 		"++++++++++++++++++++++++++++", // 0
@@ -96,7 +96,7 @@ class Message {
 		"++++++++++++++++++++++++++++"  // 4
     //   0123456789012345678901234567
 	};
-	const char* player2Wins[SMALL_MESSAGE_ROWS]{
+	const char player2Wins[SMALL_MESSAGE_ROWS][SMALL_MESSAGE_COLS + 1]{
 		//	          10        20         
 		//	 0123456789012345678901234567
 		"++++++++++++++++++++++++++++", // 0
@@ -106,7 +106,7 @@ class Message {
 		"++++++++++++++++++++++++++++"  // 4
     //   0123456789012345678901234567
 	};
-	const char* player1AnsweredCorrectly[SMALL_MESSAGE_ROWS]{
+	const char player1AnsweredCorrectly[SMALL_MESSAGE_ROWS][SMALL_MESSAGE_COLS + 1]{
 		//	          10        20         
 		//	 0123456789012345678901234567
 		"++++++++++++++++++++++++++++", // 0
@@ -116,7 +116,7 @@ class Message {
 		"++++++++++++++++++++++++++++"  // 4
 										//   0123456789012345678901234567
 	};
-	const char* player2AnsweredCorrectly[SMALL_MESSAGE_ROWS]{
+	const char player2AnsweredCorrectly[SMALL_MESSAGE_ROWS][SMALL_MESSAGE_COLS + 1]{
 		//	          10        20         
 		//	 0123456789012345678901234567
 		"++++++++++++++++++++++++++++", // 0
@@ -126,7 +126,7 @@ class Message {
 		"++++++++++++++++++++++++++++"  // 4
 										//   0123456789012345678901234567
 	};
-	const char* player1AnsweredWrong[SMALL_MESSAGE_ROWS]{
+	const char player1AnsweredWrong[SMALL_MESSAGE_ROWS][SMALL_MESSAGE_COLS + 1]{
 		//	          10        20         
 		//	 0123456789012345678901234567
 		"++++++++++++++++++++++++++++", // 0
@@ -136,7 +136,7 @@ class Message {
 		"++++++++++++++++++++++++++++"  // 4
 										//   0123456789012345678901234567
 	};
-	const char* player2AnsweredWrong[SMALL_MESSAGE_ROWS]{
+	const char player2AnsweredWrong[SMALL_MESSAGE_ROWS][SMALL_MESSAGE_COLS + 1]{
 		//	          10        20         
 		//	 0123456789012345678901234567
 		"++++++++++++++++++++++++++++", // 0
@@ -150,8 +150,8 @@ public:
 	void routePrintMessage(char type);
 private:
 	//everyone who wants to print a message goes through routePrintMessage
-	void printFullSizeMessage(const char** message);
-	void printSmallSizeMessage(const char** message);
+	void printFullSizeMessage(const char message[FULL_MESSAGE_ROWS][FULL_MESSAGE_COLS + 1]);
+	void printSmallSizeMessage(const char message[SMALL_MESSAGE_ROWS][SMALL_MESSAGE_COLS + 1]);
 };
 
 

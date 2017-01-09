@@ -1,6 +1,6 @@
 #include "Menu.h"
 
-void Menu::printMenu(const char** menu) {
+void Menu::printMenu(const char menu[ROWS][COLS+1]) {
 	for (int i = 0; i < ROWS; i++)
 	{
 		for (int j = 0; j < COLS; j++)

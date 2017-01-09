@@ -42,7 +42,7 @@ void Message::routePrintMessage(char type) {
 	Sleep(500);
 }
 
-void Message::printFullSizeMessage(const char** message) {
+void Message::printFullSizeMessage(const char message[FULL_MESSAGE_ROWS][FULL_MESSAGE_COLS + 1]) {
 	for (int i = 0; i < FULL_MESSAGE_ROWS; i++)
 	{
 		for (int j = 0; j < FULL_MESSAGE_COLS; j++)
@@ -53,7 +53,7 @@ void Message::printFullSizeMessage(const char** message) {
 	}
 }
 
-void Message::printSmallSizeMessage(const char** message) {
+void Message::printSmallSizeMessage(const char message[SMALL_MESSAGE_ROWS][SMALL_MESSAGE_COLS + 1]) {
 	for (int i = 0; i < SMALL_MESSAGE_ROWS; i++)
 	{
 		for (int j = 0; j < SMALL_MESSAGE_COLS; j++)
