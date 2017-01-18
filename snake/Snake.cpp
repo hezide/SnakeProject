@@ -105,6 +105,8 @@ int Snake::hitSomething(Point next)//return 0 if the sanke hit himself, 1 if he 
 		}
 		return 4;
 	}
+	else if (ch == '!' || ch == '$' || ch == '%')
+		return 5;
 	else return -1;
 }
 
@@ -116,6 +118,7 @@ void Snake::disappear()
 		p.set(body[i].getX(), body[i].getY());
 		theGame->getBoard(1).insertCharToBoard(' ', p);
 	}
+	setCanMove(-5);
 }
 
 void Snake::returnAfterGetShot()

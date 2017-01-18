@@ -4,12 +4,20 @@
 #include <cstring>
 #include "number.h"
 #include "Color.h"
+#include <queue>
+
 enum { ROWS = 20, COLS = 80, FOOD = 60 };
 
 class Board {
 	char board[ROWS][COLS + 1];
 	Number food[FOOD];
 	int foodSize = 0;
+	struct replayItem {
+		Point pos;
+		char ch;
+		int step;
+	};
+	std::queue <replayItem> replayQueue;
 #include "example_board.h"
 public:
 	Board() {

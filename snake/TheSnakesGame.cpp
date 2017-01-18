@@ -10,6 +10,11 @@ void TheSnakesGame::init() {
 	s[1].setColor(Color::YELLOW);
 	s[0].setGame(this);
 	s[1].setGame(this);
+	for (int i = 0; i < NUM_OF_CREATURES; i++) {
+		creaturesArray[i]->setGame(this);
+		creaturesArray[i]->init();
+	}
+
 	s[0].setPosition(9, 10);
 	s[1].setPosition(9, 70);
 	s[0].setSymbol('@');
@@ -30,6 +35,7 @@ void TheSnakesGame::init() {
 }
 
 void TheSnakesGame::run() {
+
 	char key = 0;
 	int dir, fiveMoves = 0;
 	Point foodPoint;
@@ -48,7 +54,6 @@ void TheSnakesGame::run() {
 			Sleep(1000);
 			changeToNextRiddle();//transform to the next riddle in the array
 		}
-
 		if (_kbhit()) {
 			key = _getch();
 			if ((dir = s[0].getDirection(key)) != -1)
@@ -56,27 +61,28 @@ void TheSnakesGame::run() {
 			else if ((dir = s[1].getDirection(key)) != -1)
 				checkOppositeDir(1, key, dir);
 		}
-
 		foodIsEaten();//checks if one of the players ate food, and pass it on to the board
 
 		moveBullets();//move all the bullets on the screen
-
+		moveCreatures();
+		Sleep(50);
 		s[0].returnAfterGetShot();//return the snake the the game only after 5 numbers came up
 		s[0].move();
 
 		s[1].returnAfterGetShot();//return the snake the the game only after 5 numbers came up
 		s[1].move();
+		Sleep(50);
+		moveBullets();
+		moveCreatures();
 
-		Sleep(100);
+		Sleep(50);
 
 		fiveMoves++;
 		if (fiveMoves % 5 == 0) {//check if we need to add another number to board
-			this->getBoard(1).insertRndNumberToFood();
+			//this->getBoard(1).insertRndNumberToFood();
 			s[0].setCanMove(s[0].getCanMove() + 1);
 			s[1].setCanMove(s[1].getCanMove() + 1);
 		}
-
-
 	} while (key != ESC);
 
 	if (key == ESC) {//pause the game and go to secondary menu
@@ -159,6 +165,9 @@ void TheSnakesGame::secondaryMenu() {
 		gameBoard[0].printBoard();
 		run();
 		break;
+	case '7':
+		/*replay latest mission*/
+		break;
 	case 'c'://Cheat to insert the number you want to the board
 		int cheatNum;
 		/*place the cursor in the currect location*/
@@ -207,6 +216,8 @@ void TheSnakesGame::findMatchingNumbers() {
 
 void TheSnakesGame::changeToNextRiddle()
 {
+	restoreDeadCreatures();
+
 	s[0].unActiveAllBullets();
 	s[1].unActiveAllBullets();
 	currRiddle = (currRiddle + 1) % NUM_OF_RIDDLES;
@@ -318,7 +329,7 @@ void TheSnakesGame::moveBullets() {
 	Point nextPos, pos;
 	int hitNext, hit;
 	int direction;
-	for (int i = 0; i < 2; i++) {//each bullet move twice
+//	for (int i = 0; i < 2; i++) {//each bullet move twice
 		for (int i = 0; i <= 1; i++) {//snake
 			for (int j = 0; j < 5; j++) {//bullets of each snake
 				if (s[i].getBulletFromStack(j).isActive()) {
@@ -336,7 +347,7 @@ void TheSnakesGame::moveBullets() {
 				}
 			}
 		}
-	}
+//	}
 }
 
 void TheSnakesGame::moveSingleBullet(int snake, int bullet, Point pos, int direction) {
@@ -355,6 +366,8 @@ void TheSnakesGame::deleteSingleBulletFromBoard(int snake, int bullet, Point pos
 {
 	gameBoard[0].insertCharToBoard(' ', pos);
 	s[snake].getBulletFromStack(bullet).draw(' ');
+	s[snake].getBulletFromStack(bullet).setActiveStatus(false);
+
 }
 
 void TheSnakesGame::handleWhatIsHit(int snake, int bullet, Point pos, int direction, int hit) {
@@ -365,45 +378,39 @@ void TheSnakesGame::handleWhatIsHit(int snake, int bullet, Point pos, int direct
 		moveSingleBullet(snake, bullet, pos, direction);
 		break;
 	case 0://s[snake] hit himself
-		s[snake].setCanMove(-5);
 		s[snake].disappear();
-		s[snake].getBulletFromStack(bullet).setActiveStatus(false);
-		gameBoard[0].insertCharToBoard(' ', pos);
-		s[snake].getBulletFromStack(bullet).draw(' ');
+		deleteSingleBulletFromBoard(snake, bullet, pos);
 		break;
 	case 1://s[snake] hit the other snake
-		s[(snake + 1) % 2].setCanMove(-5);
 		s[(snake + 1) % 2].disappear();
 		s[snake].setStackSize(s[snake].getStackSize() + 1);
-		s[snake].getBulletFromStack(bullet).setActiveStatus(false);
 		deleteSingleBulletFromBoard(snake, bullet, pos);
 		break;
 	case 2://s[snake] hit a number
 		getBoard(1).removeNumber(getBoard(1).getNumber(pos.next(direction)));
-		s[snake].getBulletFromStack(bullet).setActiveStatus(false);
 		deleteSingleBulletFromBoard(snake, bullet, pos);
 		break;
 	case 3://s[snake] hit his own bullet
 		if (s[snake].getBulletFromStack(bullet).getDirection() != s[snake].findBulletByPos(nextPos).getDirection()) {
 			//first Bullet-the hitting bullet
-			s[snake].getBulletFromStack(bullet).setActiveStatus(false);
 			deleteSingleBulletFromBoard(snake, bullet, pos);
 			//second Bullet
-			gameBoard[0].insertCharToBoard(' ', nextPos);
-			s[snake].findBulletByPos(nextPos).draw(' ');
+			deleteSingleBulletFromBoard(snake, bullet, nextPos);
 			s[snake].findBulletByPos(nextPos).setActiveStatus(false);
 		}else
 			moveSingleBullet(snake, bullet, pos, direction);
 		break;
-	case 4:
+	case 4://if he hit the other snake bullet
 		s[snake].setStackSize(s[snake].getStackSize() + 1);
-		s[snake].getBulletFromStack(bullet).setActiveStatus(false);
 		deleteSingleBulletFromBoard(snake, bullet, pos);
 		//s[(i+1)%2]
 		s[(snake + 1) % 2].setStackSize(s[(snake + 1) % 2].getStackSize() + 1);
 		deleteSingleBulletFromBoard((snake + 1) % 2, bullet, nextPos);
 		s[(snake + 1) % 2].findBulletByPos(nextPos).setActiveStatus(false);
 		break;
+	case 5:
+		creatureWasHit(nextPos);//disappear the creature if needed
+		deleteSingleBulletFromBoard(snake, bullet, pos);
 	}
 }
 
@@ -415,6 +422,60 @@ void TheSnakesGame::disappearSpecificSnake(int snake)
 void TheSnakesGame::canMoveSpecificSnake(int snake)
 {
 	s[snake].setCanMove(-5);
+}
+
+void TheSnakesGame::restoreDeadCreatures()
+{
+	for (int i = 0; i < NUM_OF_CREATURES;i++) {
+		if (!creaturesArray[i]->getIsActive()) {
+			creaturesArray[i]->init();
+		}
+	}
+}
+
+void TheSnakesGame::moveCreatures()
+{
+	int j;
+	for (int i = 0; i < NUM_OF_CREATURES; i++) {
+		if (creaturesArray[i]->getIsActive()) {//if the creature is alive. move
+	//		for (j = 0; j < 2; j++) {
+				if (typeid(creaturesArray[i]) == typeid(flyingCols))//if this condition occurs the loop will only run once9because this creature runs slower
+					j = 1;
+				creaturesArray[i]->nextStepIsPossible();
+				creaturesArray[i]->moveAndDraw();
+	//		}
+		}
+	}
+}
+
+void TheSnakesGame::handleCreatureHit(int i)
+{
+	if (!creaturesArray[i]->getIsBulletProof()) {
+		creaturesArray[i]->disappearCreature();
+		creaturesArray[i]->setIsActive(false);
+	}
+}
+
+void TheSnakesGame::creatureWasHit(Point nextPos)
+{
+	Point creaturePos;
+	for (int i = 0; i < NUM_OF_CREATURES; i++) {
+		creaturePos.set(creaturesArray[i]->getX(), creaturesArray[i]->getY());
+		if (creaturePos == nextPos) {
+			handleCreatureHit(i);
+		}
+	}
+}
+
+Bullet* TheSnakesGame::findBulletInBothSnakes(Point pos)
+{
+	Bullet* res;
+	for (int i = 0; i < 2; i++) {
+		res = &s[i].findBulletByPos(pos);
+		if (res->getPos() == pos)
+			return res;
+	}
+	return res;
 }
 
 

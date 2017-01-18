@@ -59,12 +59,19 @@ char Menu::secondaryMenuGetInput() {
 		break;
 	case '4':
 		return selection;
+		break;
 	case '5':
 		return selection;
+		break;
 	case '6':
 		return selection;
+		break;
+	case '7':
+		return selection;
+		break;
 	case 'c':
 		return selection;
+		break;
 	default:
 		secondaryMenuGetInput();
 	}
