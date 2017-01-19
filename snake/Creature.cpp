@@ -11,7 +11,7 @@ void Creature::moveAndDraw()
 			draw(' ');
 			move();
 			pos.set(getX(), getY());
-			getGame()->getBoard(1).insertCharToBoard(getSymbol(), pos);
+			getGame()->getBoard(1).insertCharToBoard(getSymbol(), pos,color);
 			draw(getSymbol());
 		}
 

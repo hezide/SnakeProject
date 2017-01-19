@@ -24,10 +24,12 @@ public:
 		x = a;
 		y = b;
 	}
-	void draw(char ch)
+	void draw(char ch,Color color=WHITE)
 	{
 		gotoxy(x, y);
+		setTextColor(color);
 		cout << ch;
+		setTextColor(WHITE);
 		cout.flush();
 	}
 	void move();

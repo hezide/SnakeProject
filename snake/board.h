@@ -4,7 +4,7 @@
 #include <cstring>
 #include "number.h"
 #include "Color.h"
-#include <queue>
+#include "ReplayMission.h"
 
 enum { ROWS = 20, COLS = 80, FOOD = 60 };
 
@@ -12,25 +12,22 @@ class Board {
 	char board[ROWS][COLS + 1];
 	Number food[FOOD];
 	int foodSize = 0;
-	struct replayItem {
-		Point pos;
-		char ch;
-		int step;
-	};
-	std::queue <replayItem> replayQueue;
+	int step = 0;
+	replayMission missionToReplay;
 #include "example_board.h"
 public:
 	Board() {
 		resetBoard();
 	}
-
 	void printBoard();
 	char getChFromBoard(int x, int y)
 	{
 		return board[y][x];
 	}
-	void insertCharToBoard(char _ch, Point point)
+	void insertCharToBoard(char _ch, Point point,Color color=WHITE)
 	{
+		//Color chColor = getColorOfTheCh(_ch);
+		missionToReplay.insertItemToQueue(point, _ch, step,color);
 		int x, y;
 		x = point.getX();
 		y = point.getY();
@@ -45,7 +42,6 @@ public:
 		foodSize = size;
 	}
 	void insertRndNumberToFood(int cheat=-1);
-
 	void insertNumToBoard(Number num);
 	void printNumbers();
 	void printSingleNumber(Number number)
@@ -59,10 +55,24 @@ public:
 	Number& getNumber(Point pos);
 	void clearHalfOfTheNumbers();
 	void removeNumber(Number& numToRemove);
-	Number* getNumberArr()
-	{
+	Number* getNumberArr(){
 		return food;
 	}
+	void resetReplayMission() {
+		step = 0;
+		missionToReplay.emptyMissionQueue();
+	}
+	void captureBoard() {
+		missionToReplay.captureBoard(board);
+	}
+	void increaseStep() {
+		step++;
+	}
+	void replayMission() {
+		captureBoard();
+		missionToReplay.restoreSavedMission();
+	}
+	Color getColorOfTheCh(char ch);
 private:
 	void removeNumFromBoard(Number& numToRemove);
 	void removeNumFromFood(Number& numToRemove);

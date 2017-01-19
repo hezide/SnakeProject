@@ -130,6 +130,27 @@ void Board::removeNumber(Number & numToRemove)
 	removeNumFromFood(numToRemove);
 }
 
+Color Board::getColorOfTheCh(char ch)
+{
+	switch (ch) {
+	case '#':
+		return YELLOW;
+		break;
+	case '@':
+		return LIGHTGREEN;
+		break;
+	case'!':
+		
+		break;
+	case'$':
+
+		break;
+	case '%':
+
+		break;
+	}
+}
+
 void Board::removeNumFromBoard(Number & numToRemove)
 {
 	/*REMOVE THE NUM FROM THE BOARD AND PRINT SPACE*/

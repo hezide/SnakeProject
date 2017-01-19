@@ -22,12 +22,12 @@ void Snake::move() {
 			body[i] = body[i - 1];
 		}
 		body[0].move(direction);
-		setTextColor(color);
-		body[0].draw(symbol);
+//		setTextColor(color);
+		body[0].draw(symbol,color);
 		p.set(body[0].getX(), body[0].getY());
 
-		theGame->getBoard(1).insertCharToBoard(symbol, p);
-		setTextColor(Color::WHITE);
+		theGame->getBoard(1).insertCharToBoard(symbol, p, color);
+	//	setTextColor(Color::WHITE);
 
 	}
 }

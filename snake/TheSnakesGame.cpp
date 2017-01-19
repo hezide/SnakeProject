@@ -71,10 +71,11 @@ void TheSnakesGame::run() {
 
 		s[1].returnAfterGetShot();//return the snake the the game only after 5 numbers came up
 		s[1].move();
+		gameBoard[0].increaseStep();
 		Sleep(50);
 		moveBullets();
 		moveCreatures();
-
+		gameBoard[0].increaseStep();
 		Sleep(50);
 
 		fiveMoves++;
@@ -131,6 +132,8 @@ void TheSnakesGame::secondaryMenu() {
 		break;
 		//Go to Main menu
 	case '2':
+		getBoard(1).resetReplayMission();//we changed the riddle(misison) so we reset the storage of the replayMission
+		getBoard(1).captureBoard();//capture the game board
 		message.routePrintMessage('w');//print welcome message
 		mainMenu();//go to main menu
 		break;
@@ -142,6 +145,8 @@ void TheSnakesGame::secondaryMenu() {
 		break;
 		//restart stage
 	case '4':
+		getBoard(1).resetReplayMission();//we changed the riddle(misison) so we reset the storage of the replayMission
+		getBoard(1).captureBoard();//capture the game board
 		gameBoard[0].clearHalfOfTheNumbers();
 		s[0].unActiveAllBullets();
 		s[1].unActiveAllBullets();
@@ -161,12 +166,16 @@ void TheSnakesGame::secondaryMenu() {
 		//start New Game
 	case '6':
 		init();
+		getBoard(1).resetReplayMission();//we changed the riddle(misison) so we reset the storage of the replayMission
+		getBoard(1).captureBoard();//capture the game board
 		gameBoard[0].resetBoard();
 		gameBoard[0].printBoard();
 		run();
 		break;
 	case '7':
 		/*replay latest mission*/
+		gameBoard[0].replayMission();
+		secondaryMenu();
 		break;
 	case 'c'://Cheat to insert the number you want to the board
 		int cheatNum;
@@ -226,6 +235,9 @@ void TheSnakesGame::changeToNextRiddle()
 	riddleArray.printRiddle(currRiddle);
 	gameBoard[0].clearHalfOfTheNumbers();
 	Sleep(500);
+
+	getBoard(1).resetReplayMission();//we changed the riddle(misison) so we reset the storage of the replayMission
+	getBoard(1).captureBoard();//capture the game board
 }
 
 void TheSnakesGame::printPlayersStats()
@@ -333,7 +345,6 @@ void TheSnakesGame::moveBullets() {
 		for (int i = 0; i <= 1; i++) {//snake
 			for (int j = 0; j < 5; j++) {//bullets of each snake
 				if (s[i].getBulletFromStack(j).isActive()) {
-
 					direction = s[i].getBulletFromStack(j).getDirection();
 					pos.set(s[i].getBulletFromStack(j).getX(), s[i].getBulletFromStack(j).getY());
 					nextPos = pos.next(direction);
@@ -356,10 +367,10 @@ void TheSnakesGame::moveSingleBullet(int snake, int bullet, Point pos, int direc
 	s[snake].getBulletFromStack(bullet).draw(' ');
 
 	s[snake].getBulletFromStack(bullet).move(direction);
-	gameBoard[0].insertCharToBoard('*', nextPos);
-	setTextColor(s[snake].getColor());
-	s[snake].getBulletFromStack(bullet).draw('*');
-	setTextColor(Color::WHITE);
+	gameBoard[0].insertCharToBoard('*', nextPos, s[snake].getColor());
+//	setTextColor(s[snake].getColor());
+	s[snake].getBulletFromStack(bullet).draw('*', s[snake].getColor());
+	//setTextColor(Color::WHITE);
 }
 
 void TheSnakesGame::deleteSingleBulletFromBoard(int snake, int bullet, Point pos)

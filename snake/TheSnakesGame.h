@@ -10,9 +10,10 @@
 #include "Creature.h"
 #include "flyingRows.h"
 #include "flyingCols.h"
-//int step = 0;
+
 class TheSnakesGame {
 	enum { ESC = 27, FIXGOTOXY = 5};
+	enum { ROWS = 20, COLS = 80};
 	enum{PLAYER_1_LOC_X=1,PLAYER_1_LOC_Y=1};//player 1 Name Location
 	enum { PLAYER_2_LOC_X = 65, PLAYER_2_LOC_Y = 1 };//player 2 Name Location
 	enum{ NUM_OF_RIDDLES = 9 ,NUM_OF_CREATURES=4};
@@ -43,6 +44,7 @@ public:
 	{
 		return gameBoard[currBoard-1];
 	}
+
 	Riddles getRiddles() {
 		return riddleArray;
 	}
