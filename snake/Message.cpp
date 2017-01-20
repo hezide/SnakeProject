@@ -42,6 +42,18 @@ void Message::routePrintMessage(char type) {
 	Sleep(500);
 }
 
+void Message::printReplayMessage()
+{
+	for (int i = 0; i < 6; i++)
+	{
+		for (int j = 0; j < FULL_MESSAGE_COLS; j++)
+		{
+			gotoxy(j, i - FIXGOTOXY);//fixed because -FIXEDGOTOXY is the menu's location.
+			cout << RePlay[i][j];
+		}
+	}
+}
+
 void Message::printFullSizeMessage(const char message[FULL_MESSAGE_ROWS][FULL_MESSAGE_COLS + 1]) {
 	for (int i = 0; i < FULL_MESSAGE_ROWS; i++)
 	{

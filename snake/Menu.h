@@ -38,6 +38,9 @@ class Menu {
 		"++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++"  // 5
 	//   01234567890123456789012345678901234567890123456789012345678901234567890123456789
 	};
+
+
+
 	Point mainMenuSelectorPosition = { 58,4 };//main menu cursor position
 	Point secondaryMenuSelectorPosition = { 40,4 };//sec menu cursor position
 public:

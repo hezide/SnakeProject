@@ -25,6 +25,5 @@ public:
 	void emptyReserveQueue();
 	void restoreSavedMission();
 	void printCapturedBoard();
-
 };
 #endif

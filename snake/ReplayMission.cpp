@@ -6,7 +6,10 @@ void replayMission::captureBoard(const char boardToCapture[ROWS][COLS + 1])
 		for (int j = 0; j < COLS - 1; j++) {
 			capturedBoard[i][j] = boardToCapture[i][j];
 		}
+		capturedBoard[i][COLS] = '\0';
 	}
+
+
 }
 
 void replayMission::insertItemToQueue(Point _pos, char _ch, int _step,Color color=WHITE)
@@ -50,6 +53,7 @@ void replayMission::restoreSavedMission()
 		}
 		currStep++;
 		Sleep(150);
+
 	}
 	replayQueue = reserveQueue;
 	emptyReserveQueue();

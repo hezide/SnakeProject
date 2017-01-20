@@ -13,6 +13,7 @@ class Creature :public Point {
 	bool bulletProof;
 	bool crossingWalls;
 	bool isActive;
+	bool doubleSpeed;
 	TheSnakesGame* theGame;
 	
 public:
@@ -56,7 +57,19 @@ public:
 	bool getIsActive() {
 		return isActive;
 	}
+		void setColor(Color _color) {
+		color = _color;
+	}						  
 	void disappearCreature();
+	bool isDoubleSpeed() {
+		return doubleSpeed;
+	}
+	void setDoubleSpeed(bool _doubleSpeed) {
+		doubleSpeed = _doubleSpeed;
+	}
+	void flipDoubleSpeed() {
+		doubleSpeed = !doubleSpeed;
+	}
 };
 
 #endif

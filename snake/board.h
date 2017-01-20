@@ -26,7 +26,6 @@ public:
 	}
 	void insertCharToBoard(char _ch, Point point,Color color=WHITE)
 	{
-		//Color chColor = getColorOfTheCh(_ch);
 		missionToReplay.insertItemToQueue(point, _ch, step,color);
 		int x, y;
 		x = point.getX();
@@ -69,10 +68,8 @@ public:
 		step++;
 	}
 	void replayMission() {
-		captureBoard();
 		missionToReplay.restoreSavedMission();
 	}
-	Color getColorOfTheCh(char ch);
 private:
 	void removeNumFromBoard(Number& numToRemove);
 	void removeNumFromFood(Number& numToRemove);

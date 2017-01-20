@@ -10,13 +10,14 @@
 #include "Creature.h"
 #include "flyingRows.h"
 #include "flyingCols.h"
+#include "numberEater.h"
 
 class TheSnakesGame {
 	enum { ESC = 27, FIXGOTOXY = 5};
 	enum { ROWS = 20, COLS = 80};
 	enum{PLAYER_1_LOC_X=1,PLAYER_1_LOC_Y=1};//player 1 Name Location
 	enum { PLAYER_2_LOC_X = 65, PLAYER_2_LOC_Y = 1 };//player 2 Name Location
-	enum{ NUM_OF_RIDDLES = 9 ,NUM_OF_CREATURES=4};
+	enum{ NUM_OF_RIDDLES = 9 ,NUM_OF_CREATURES=5};
 	Snake s[2];
 	Board gameBoard[1];
 	int currBoard = 0;
@@ -27,13 +28,15 @@ class TheSnakesGame {
 	Creature* creaturesArray[NUM_OF_CREATURES];
 	flyingRows frCW, fr;
 	flyingCols fcCW, fc;
+	numberEater nE;
 public:
-	TheSnakesGame() :fr(false),frCW(true),fcCW(true),fc(false){
+	TheSnakesGame() :fr(false),frCW(true),fcCW(true),fc(false),nE(false){
 		currRiddle = 0;
 		creaturesArray[0] = &frCW;
 		creaturesArray[1] = &fr;
 		creaturesArray[2] = &fcCW;
 		creaturesArray[3] = &fc;
+		creaturesArray[4] = &nE;
 	}
 	int getCurrBoard()
 	{
@@ -80,6 +83,9 @@ public:
 	void handleCreatureHit(int i);
 	void creatureWasHit(Point nextPos);
 	Bullet* findBulletInBothSnakes(Point pos);
+	bool checkIfThereAreMatchingNumbers();
+	Point findTheClosestNumber(Point pos);
+	int  calculateDistanceBetweenTwoPoints(Point pos1, Point pos2);
 };
 
 #endif

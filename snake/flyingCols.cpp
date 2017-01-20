@@ -45,9 +45,11 @@ void flyingCols::init()
 		set(45, 11);
 		setDirection(0);
 	}
+	setDoubleSpeed(true);
 	setBulletProof(false);
 	setSymbol('$');
 	setIsActive(true);
+	setColor(RED);
 }
 
 

@@ -6,13 +6,12 @@ void Creature::moveAndDraw()
 		Point pos;
 		if (getIsActive()) {//runs only if the creature is active
 			pos.set(getX(), getY());
-
-			getGame()->getBoard(1).insertCharToBoard(' ', pos);
-			draw(' ');
 			move();
+			getGame()->getBoard(1).insertCharToBoard(' ', pos);
+			pos.draw(' ');
 			pos.set(getX(), getY());
 			getGame()->getBoard(1).insertCharToBoard(getSymbol(), pos,color);
-			draw(getSymbol());
+			draw(getSymbol(),color);
 		}
 
 }

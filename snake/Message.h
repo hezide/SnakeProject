@@ -6,6 +6,7 @@
 class Message {
 	enum { FULL_MESSAGE_ROWS = 20, FULL_MESSAGE_COLS = 80, SMALL_MESSAGE_ROWS=5,SMALL_MESSAGE_COLS=28};
 	enum {FIX_GOTO_X_Y_ROWS=7, FIX_GOTO_X_Y_COLS=26};//enum of small message location
+	enum{FIXGOTOXY=5};//FOR THE REPLAY
 	const char gamePaused[SMALL_MESSAGE_ROWS][SMALL_MESSAGE_COLS+1]{
 	//	          10        20         
 	//	 0123456789012345678901234567
@@ -146,8 +147,20 @@ class Message {
 		"++++++++++++++++++++++++++++"  // 4
 										//   0123456789012345678901234567
 	};
+	const char RePlay[6][FULL_MESSAGE_COLS + 1] = {
+		//	          10        20        30        40        50        60        70       79
+		//	 01234567890123456789012345678901234567890123456789012345678901234567890123456789
+		"++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++", // 0
+		"+                |  _ \\    ___  |  _ \\  | |   __ _  | | | |                    +", // 1
+		"+                | |_) |  / _ \\ | |_) | | |  / _` | | |_| |                    +", // 2
+		"+                |  _ <  |  __/ |  __/  | | | (_| |  \\__, |                    +", // 3
+		"+                |_| \\_\\  \\___| |_|     |_|  \\__,_|  |___\\/                    +", // 4
+		"++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++"  // 5
+																							//   01234567890123456789012345678901234567890123456789012345678901234567890123456789
+	};
 public:
 	void routePrintMessage(char type);
+	void printReplayMessage();
 private:
 	//everyone who wants to print a message goes through routePrintMessage
 	void printFullSizeMessage(const char message[FULL_MESSAGE_ROWS][FULL_MESSAGE_COLS + 1]);

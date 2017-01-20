@@ -80,7 +80,7 @@ void TheSnakesGame::run() {
 
 		fiveMoves++;
 		if (fiveMoves % 5 == 0) {//check if we need to add another number to board
-			//this->getBoard(1).insertRndNumberToFood();
+			this->getBoard(1).insertRndNumberToFood();
 			s[0].setCanMove(s[0].getCanMove() + 1);
 			s[1].setCanMove(s[1].getCanMove() + 1);
 		}
@@ -110,6 +110,7 @@ void TheSnakesGame::mainMenu() {
 		PlaySound(NULL, NULL, NULL);
 		currRiddle = 0;
 		getBoard(1).printBoard();//print blank board in order to remove the welcome message
+		getBoard(1).captureBoard();
 		init();
 		run();
 		break;
@@ -166,14 +167,15 @@ void TheSnakesGame::secondaryMenu() {
 		//start New Game
 	case '6':
 		init();
-		getBoard(1).resetReplayMission();//we changed the riddle(misison) so we reset the storage of the replayMission
-		getBoard(1).captureBoard();//capture the game board
 		gameBoard[0].resetBoard();
 		gameBoard[0].printBoard();
+		getBoard(1).resetReplayMission();//we changed the riddle(misison) so we reset the storage of the replayMission
+		getBoard(1).captureBoard();//capture the game board
 		run();
 		break;
 	case '7':
 		/*replay latest mission*/
+		message.printReplayMessage();
 		gameBoard[0].replayMission();
 		secondaryMenu();
 		break;
@@ -238,6 +240,7 @@ void TheSnakesGame::changeToNextRiddle()
 
 	getBoard(1).resetReplayMission();//we changed the riddle(misison) so we reset the storage of the replayMission
 	getBoard(1).captureBoard();//capture the game board
+
 }
 
 void TheSnakesGame::printPlayersStats()
@@ -341,7 +344,6 @@ void TheSnakesGame::moveBullets() {
 	Point nextPos, pos;
 	int hitNext, hit;
 	int direction;
-//	for (int i = 0; i < 2; i++) {//each bullet move twice
 		for (int i = 0; i <= 1; i++) {//snake
 			for (int j = 0; j < 5; j++) {//bullets of each snake
 				if (s[i].getBulletFromStack(j).isActive()) {
@@ -358,7 +360,6 @@ void TheSnakesGame::moveBullets() {
 				}
 			}
 		}
-//	}
 }
 
 void TheSnakesGame::moveSingleBullet(int snake, int bullet, Point pos, int direction) {
@@ -368,9 +369,7 @@ void TheSnakesGame::moveSingleBullet(int snake, int bullet, Point pos, int direc
 
 	s[snake].getBulletFromStack(bullet).move(direction);
 	gameBoard[0].insertCharToBoard('*', nextPos, s[snake].getColor());
-//	setTextColor(s[snake].getColor());
 	s[snake].getBulletFromStack(bullet).draw('*', s[snake].getColor());
-	//setTextColor(Color::WHITE);
 }
 
 void TheSnakesGame::deleteSingleBulletFromBoard(int snake, int bullet, Point pos)
@@ -446,15 +445,14 @@ void TheSnakesGame::restoreDeadCreatures()
 
 void TheSnakesGame::moveCreatures()
 {
-	int j;
 	for (int i = 0; i < NUM_OF_CREATURES; i++) {
 		if (creaturesArray[i]->getIsActive()) {//if the creature is alive. move
-	//		for (j = 0; j < 2; j++) {
-				if (typeid(creaturesArray[i]) == typeid(flyingCols))//if this condition occurs the loop will only run once9because this creature runs slower
-					j = 1;
+			if (creaturesArray[i]->isDoubleSpeed()) {
 				creaturesArray[i]->nextStepIsPossible();
 				creaturesArray[i]->moveAndDraw();
-	//		}
+			}
+			if (typeid(flyingCols) == typeid(*creaturesArray[i]))
+				creaturesArray[i]->flipDoubleSpeed();
 		}
 	}
 }
@@ -489,6 +487,54 @@ Bullet* TheSnakesGame::findBulletInBothSnakes(Point pos)
 	return res;
 }
 
+bool TheSnakesGame::checkIfThereAreMatchingNumbers()
+{
+	Number temp;
+	for (int i = 0; i < gameBoard[0].getFoodSize(); i++)
+	{
+		temp = gameBoard[0].getNumberArr()[i];
+		if (riddleArray.solveRiddle(currRiddle, temp.getNum()))
+			return true;
+	}
+	return false;
+}
+
+Point TheSnakesGame::findTheClosestNumber(Point pos)
+{
+	Point res;
+	Number temp;
+	int minSteps=1000,steps=0;
+	for (int i = 0; i < gameBoard[0].getFoodSize(); i++)
+	{
+		temp = gameBoard[0].getNumberArr()[i];
+		if (riddleArray.solveRiddle(currRiddle, temp.getNum())) {
+			steps = calculateDistanceBetweenTwoPoints(pos, temp.getPos()[0]);
+			if (steps < minSteps) {
+				minSteps = steps;
+				res = temp.getPos()[0];
+			}
+		}
+	}
+	return res;
+}
+
+int TheSnakesGame::calculateDistanceBetweenTwoPoints(Point pos1, Point pos2) {
+	int res = 0;
+	if (abs(pos1.getX() - pos2.getX())>39)
+	{
+		if (pos1.getX() > pos2.getX())
+			res+=79 - pos1.getX() + pos2.getX();
+		else
+			res += 79 - pos2.getX() + pos1.getX();
+	}
+	else {
+		if (pos1.getX() > pos2.getX())
+			res +=pos1.getX() - pos2.getX();
+		else
+			res +=pos2.getX() - pos1.getX();
+	}
+	return res;
+}													
 
 
 

@@ -5,6 +5,7 @@
 
 class flyingCols :public Creature {
 	enum { ROWS = 20, COLS = 80 };
+
 public:
 	flyingCols(bool isCW) {
 		setCrossingWalls(isCW);

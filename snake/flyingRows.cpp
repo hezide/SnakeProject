@@ -45,7 +45,9 @@ void flyingRows::init()
 		set(50,11);
 		setDirection(3);
 	}
+	setDoubleSpeed(true);
 	setBulletProof(true);
 	setSymbol('!');
 	setIsActive(true);
+	setColor(LIGHTBLUE);
 }

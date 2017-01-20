@@ -27,7 +27,10 @@ public:
 	void draw(char ch,Color color=WHITE)
 	{
 		gotoxy(x, y);
-		setTextColor(color);
+		if(color==BLACK)
+			setTextColor(WHITE);
+		else
+			setTextColor(color);
 		cout << ch;
 		setTextColor(WHITE);
 		cout.flush();

@@ -130,38 +130,14 @@ void Board::removeNumber(Number & numToRemove)
 	removeNumFromFood(numToRemove);
 }
 
-Color Board::getColorOfTheCh(char ch)
-{
-	switch (ch) {
-	case '#':
-		return YELLOW;
-		break;
-	case '@':
-		return LIGHTGREEN;
-		break;
-	case'!':
-		
-		break;
-	case'$':
-
-		break;
-	case '%':
-
-		break;
-	}
-}
-
 void Board::removeNumFromBoard(Number & numToRemove)
 {
 	/*REMOVE THE NUM FROM THE BOARD AND PRINT SPACE*/
 	int numOfDigits = numToRemove.getNumOfDigits();
-	int x, y;
-	x = numToRemove.getPos()[0].getX();
-	y = numToRemove.getPos()[0].getY();
-	gotoxy(x, y);
 
 	for (int i = 0; i < numOfDigits ; i++) {
-		board[y][x + i] = ' ';
+		insertCharToBoard(' ', numToRemove.getPos()[i]);
+		gotoxy(numToRemove.getPos()[i].getX(), numToRemove.getPos()[i].getY());
 		cout << ' ';
 	}
 }
