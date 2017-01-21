@@ -2,43 +2,36 @@
 
 bool Riddles::solveRiddle(int numOfRiddle, int numToSolve)
 {
-	switch (numOfRiddle) {
+	int X = riddleNames[numOfRiddle].var;
+	int type = riddleNames[numOfRiddle].riddleType;
+
+	switch (type) {
 	case 0:
-		if (numToSolve == exerciseSolution)
-			return true;
-		else
-			return false;
-		break;
-	case 1:
 		return solveIsEven(numToSolve);
 		break;
-	case 2:
+	case 1:
 		return solveIsPrimeNumber(numToSolve);
 		break;
+	case 2:
+		return solveNumIsDivideByX(numToSolve, X);
+		break;
 	case 3:
-		return solveNumIsDivideBy3(numToSolve);
+		return solveNumIsMultipleOfX(numToSolve, X);
 		break;
 	case 4:
-		return solveNumIsMultipleOf7(numToSolve);
-		break;
-	case 5:
 		return solveNumIsPowerOfIntegerNumber(numToSolve);
 		break;
+	case 5:
+		return collectPowOfX(numToSolve, X);
+		break;
 	case 6:
-		return solveNumIsDivideBy4(numToSolve);
+		return collectNumberThatCanDivideX(numToSolve, X);
 		break;
 	case 7:
-		return solveNumIsDivideBy5WithCarry2(numToSolve);
+		return (numToSolve == getExerciseSolution());
 		break;
-	case 8:
-		return collectPowOf4(numToSolve);
-		break;
-	case 9:
-		return collectNumberThatCanDivide16(numToSolve);
-		break;
-	default:
-		return false;
 	}
+	return false;
 }
 
 void Riddles::printBlock()
@@ -51,7 +44,15 @@ void Riddles::printBlock()
 	}
 }
 
-void Riddles::createComplexExercise()
+void Riddles::printRiddle(int currRiddle)
+{
+	gotoxy(1, -FIXGOTOXY + 4);
+	if (riddleNames[currRiddle].riddleType == 7)
+		createComplexExercise(currRiddle);
+	cout << riddleNames[currRiddle].str;
+}
+
+void Riddles::createComplexExercise(int curr)
 {
 	char op1, op2;
 	int left, mid, right, sol;
@@ -110,7 +111,76 @@ void Riddles::createComplexExercise()
 
 	} while (!isLegalExercise);
 	exerciseSolution = *numToSolve;
-	createTheExcerciseString(&left, &mid, &right, &sol, numToSolve, op1, op2);
+	createTheExcerciseString(&left, &mid, &right, &sol, numToSolve, op1, op2,curr);
+}
+
+void Riddles::countAndAllocateFromTextFile(ifstream& file)
+{
+	int number_of_lines=0,i=0;
+	string line;
+
+	while (!file.eof()) {//get the number of the lines
+		getline(file,line);
+		number_of_lines++;
+	}
+	numOfRiddles = number_of_lines;
+
+	riddleNames = new singleRiddle[number_of_lines];
+	file.seekg(0, ios::beg);
+
+	while (!file.eof()) {
+		getline(file, line);
+		analysisRiddle(line, i);//reads the riddle and extract the type of the riddle,variable and puts it in the riddles array
+		i++;
+	}
+	file.close();
+}
+
+void Riddles::analysisRiddle(string str, int index)
+{
+	string types[NUMOFRIDDLETYPES] = {
+	{ "Collect Even Number" },
+	{ "Collect Prime Number" },
+	{ "Collect Number divided by" },
+	{ "Collect Number that is multipication of" },
+	{ "Collect Number that is a power of an integer number" },
+	{ "Collect number that is power of" },
+	{ "Collect number that can divide" },
+	{ "Complex Exercise" } };
+	for (int i = 0; i < NUMOFRIDDLETYPES; i++) {
+		if (str.find(types[i])!=string::npos) {
+			riddleNames[index].str = centerAlignTheStr(str);
+			riddleNames[index].riddleType = i;
+			riddleNames[index].var=extractVariableFromString(str);
+		}
+		
+	}
+}
+
+int Riddles::extractVariableFromString(string str)
+{
+	int n = str.find_first_of("0123456789");
+	if (n != string::npos)
+	{
+		std::size_t const m = str.find_first_not_of("0123456789", n);
+		n = stoi(str.substr(n, m != std::string::npos ? m - n : m));
+	}
+	return n;
+}
+
+string Riddles::centerAlignTheStr(string str)
+{
+	int size=str.length();
+	int n = (COLS - size)/2;//calculate the num of spaces that should be in each side
+	string temp,res;
+
+	for (int i = 0; i < n; i++)
+		temp.append(" ");
+	res.append(temp);
+	res.append(str);
+	res.append(temp);
+
+	return res;
 }
 
 int Riddles::getRandomNumber(char op ,int before) {
@@ -197,70 +267,97 @@ int* Riddles::randWhiceNumShouldBeSolved(int* left, int* mid, int* right, int* s
 	}
 }
 
-void Riddles::createTheExcerciseString(int * left, int * mid, int * right, int * sol, int * numToSolve, char op1, char op2)
+void Riddles::createTheExcerciseString(int * left, int * mid, int * right, int * sol, int * numToSolve, char op1, char op2,int curr)
 {
-	size_t i,count;
-	char temp[5] = "    ";
+	string res,temp;
+	if (left == numToSolve)
+		res.append("___");
+	else 
+		res.append(to_string(*left));//insert the number as a string to res
 
-	for (i = 0; i < 32; i++)
-		riddleNames[0][i] = ' ';
-	riddleNames[0][i] = '\0';
+	res += op1;
 
-	if (left == numToSolve) {
-		sprintf(riddleNames[0] + i, "___");
-		i += 3;
-	}
-	else {
-		_itoa(*left, temp, 10);
-		count = strlen(temp);
-		sprintf(riddleNames[0] + i, temp);
-		i += count;
-	}
+	if (mid == numToSolve)
+		res.append("___");
+	else
+		res.append(to_string(*mid));//insert the number as a string to res
 
-	riddleNames[0][i] = op1;
-	i++;
-	riddleNames[0][i] = '\0';
-	if (mid == numToSolve) {
-		sprintf(riddleNames[0] + i, "___");
-		i += 3;
-	}
-	else {
-		_itoa(*mid, temp, 10);
-		count = strlen(temp);
-		sprintf(riddleNames[0] + i, temp);
-		i += count;
-	}
+	res += op2;
 
-	riddleNames[0][i] = op2;
-	i++;
-	riddleNames[0][i] = '\0';
-	if (right == numToSolve) {
-		sprintf(riddleNames[0] + i, "___");
-		i += 3;
-	}
-	else {
-		_itoa(*right, temp, 10);
-		count = strlen(temp);
-		sprintf(riddleNames[0] + i, temp);
-		i += count;
-	}
-	riddleNames[0][i] = '=';
-	i++;
-	riddleNames[0][i] = '\0';
-	if (sol == numToSolve) {
-		sprintf(riddleNames[0] + i, "___");
-		i += 3;
-	}
-	else {
-		_itoa(*sol, temp, 10);
-		count = strlen(temp);
-		sprintf(riddleNames[0] + i, temp);
-		i += count;
-	}
-	while (i < 79) {
-		riddleNames[0][i] = ' ';
-		i++;
-	}
-	riddleNames[0][i] = '\0';
+	if (right == numToSolve)
+		res.append("___");
+	else
+		res.append(to_string(*right));//insert the number as a string to res
 
+	res += '=';
+
+	if (sol == numToSolve)
+		res.append("___");
+	else
+		res.append(to_string(*sol));//insert the number as a string to res
+
+	res=centerAlignTheStr(res);
+
+	riddleNames[curr].str = res;
+}
+
+bool Riddles::solveIsEven(int numToSolve)
+{
+	if (numToSolve % 2 == 0)
+		return true;
+	else
+		return false;
+}
+
+bool Riddles::solveIsPrimeNumber(int num)
+{
+	bool res = false;
+	int prime[39] = { 2,3,5,7,11,13,17,19,23,29,31,37,41,43,47,53,59,61,67,71,73,79,83,89,97,101,103,107,109,113,127,131,137,139,149,151,157,163,167 };
+	for (int i = 0; i < 39; i++)
+		if (num == prime[i])
+			return true;
+	return res;
+}
+
+bool Riddles::solveNumIsDivideByX(int num, int X)
+{
+	if (num % X == 0)
+		return true;
+	return false;
+}
+
+bool Riddles::solveNumIsMultipleOfX(int num, int X)
+{
+	if (num % X != 0)
+		return false;
+	return true;
+}
+
+bool Riddles::solveNumIsPowerOfIntegerNumber(int num)
+{
+	bool res = false;
+	for (int i = 1; i <= num; i++)
+		if (i*i == num)
+			return true;
+	return res;
+}
+
+bool Riddles::collectPowOfX(int num, int X)
+{
+	for (int i = 0; i < 10; i++)
+	{
+		if (pow(X, i) == num)
+			return true;
+	}
+	return false;
+}
+
+bool Riddles::collectNumberThatCanDivideX(int numToSolve, int X)
+{
+	for (int i = 0; i <= 169; i++)
+	{
+		if (numToSolve*i == X)
+			return true;
+	}
+	return false;
 }

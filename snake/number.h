@@ -8,6 +8,11 @@ class Number {
 	int num;
 	int numOfDigits;
 public:
+	bool operator==(Number& num1) {
+		if (pos[0] == num1.getPos()[0])
+			return true;
+		return false;
+	}
 	Point* getPos() {
 		return pos;
 	}
@@ -16,10 +21,7 @@ public:
 			pos[i] = { pointToSet.getX() + i,pointToSet.getY() };
 		}
 	}
-	void resetPos() {
-		for (int i = 0; i < 3; i++)
-			pos[i].set(-1, -1);
-	}
+	void resetPos();
 	int getNum() {
 		return num;
 	}
@@ -32,18 +34,6 @@ public:
 	int getNumOfDigits() {
 		return numOfDigits;
 	}
-	int calcNumOfDigits() {
-		int tempNum = num;
-		int count = 0;
-
-		if (tempNum == 0)
-			return 1;
-
-		while (tempNum > 0) {
-			tempNum /= 10;
-			count++;
-		}
-		return count;
-	}
+	int calcNumOfDigits();
 };
 #endif

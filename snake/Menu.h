@@ -39,29 +39,11 @@ class Menu {
 	//   01234567890123456789012345678901234567890123456789012345678901234567890123456789
 	};
 
-
-
 	Point mainMenuSelectorPosition = { 58,4 };//main menu cursor position
 	Point secondaryMenuSelectorPosition = { 40,4 };//sec menu cursor position
 public:
 	// gets requested menu from user and sends it to printMenu function.
-	char routePrintMenu(char menuChar) {
-		//m=Main, s=Secondary b=blank
-		switch (menuChar) {
-		case 'm':
-			printMenu(mainMenu);
-			return mainMenuGetInput();
-			break;
-		case's':
-			printMenu(secMenu);
-			return secondaryMenuGetInput();
-			break;
-		case 'b':
-			printMenu(blankMenu);
-			break;
-		}
-		return NULL;//should never reach here;
-	} 
+	char routePrintMenu(char menuChar);
 	char mainMenuGetInput();//get input for the main menu and return it to the game
 	char secondaryMenuGetInput();//get input for the secondary menu and return it to the game
 

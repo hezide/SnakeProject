@@ -52,7 +52,7 @@ void replayMission::restoreSavedMission()
 				currStep++;
 		}
 		currStep++;
-		Sleep(150);
+		Sleep(70);
 
 	}
 	replayQueue = reserveQueue;

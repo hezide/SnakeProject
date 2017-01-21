@@ -1,0 +1,10 @@
+Collect Number divided by 3
+Collect Even Number
+Collect Prime Number
+Complex Exercise
+Collect Number divided by 4
+Collect Number that is multipication of 5
+Collect Number that is a power of an integer number
+Collect number that is power of 2
+Collect number that can divide 16
+Complex Exercise

@@ -15,7 +15,6 @@ class Creature :public Point {
 	bool isActive;
 	bool doubleSpeed;
 	TheSnakesGame* theGame;
-	
 public:
 	virtual void move() = 0;
 	virtual void init() = 0;

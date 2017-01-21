@@ -13,7 +13,7 @@ void Snake::setPosition(int y, int x)
 void Snake::move() {
 	Point p;
 
-	if (nextStepIsPossible()!=2)//check if one of the snakes hit himself or in the other snake
+	if (nextStepIsPossible() != 2)//check if one of the snakes hit himself or in the other snake
 	{
 		p.set(body[size - 1].getX(), body[size - 1].getY());
 		body[size - 1].draw(' ');
@@ -23,7 +23,7 @@ void Snake::move() {
 		}
 		body[0].move(direction);
 
-		body[0].draw(symbol,color);
+		body[0].draw(symbol, color);
 		p.set(body[0].getX(), body[0].getY());
 
 		theGame->getBoard(1).insertCharToBoard(symbol, p, color);
@@ -43,11 +43,11 @@ int Snake::getDirection(char key) {
 	return -1;
 }
 
-int Snake::nextStepIsPossible()//return 2 if the snake hit the other snake, 3 if he hit food
+int Snake::nextStepIsPossible()//return 2 if the snake hit the other snake, 3 if he hit food, 4 if he hit a creature
 {
 	char ch;
 	Point next = body[0].next(direction);
-	ch = theGame->getBoard(1).getChFromBoard(next.getX(),next.getY());
+	ch = theGame->getBoard(1).getChFromBoard(next.getX(), next.getY());
 
 	if (canMove < 0)
 		return 2;
@@ -55,6 +55,13 @@ int Snake::nextStepIsPossible()//return 2 if the snake hit the other snake, 3 if
 		return 2;
 	if (ch >= '0' && ch <= '9')
 		return 3;
+	for (int i = 0; i < NUM_OF_CREATURES; i++)
+	{
+		if (ch == theGame->getCreaturesArray()[i].getSymbol()) {
+			disappear();
+			return 4;
+		}
+	}
 	return TRUE;
 }
 
@@ -88,7 +95,7 @@ int Snake::hitSomething(Point next)//return 0 if the sanke hit himself, 1 if he 
 	char ch;
 	ch = theGame->getBoard(1).getChFromBoard(next.getX(), next.getY());
 
-	if (ch==symbol)
+	if (ch == symbol)
 		return 0;
 	else if (ch == '#' || ch == '@')
 		return 1;
@@ -162,7 +169,7 @@ Bullet& Snake::findBulletByPos(Point pos)
 
 void Snake::unActiveAllBullets()
 {
-	
+
 	for (int i = 0; i < 5; i++) {
 		theGame->getBoard(1).insertCharToBoard(' ', stack[i].getPos());
 		stack[i].draw(' ');

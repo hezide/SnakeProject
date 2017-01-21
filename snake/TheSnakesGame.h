@@ -12,12 +12,12 @@
 #include "flyingCols.h"
 #include "numberEater.h"
 
+enum { NUM_OF_RIDDLES = 9, NUM_OF_CREATURES = 5 };
 class TheSnakesGame {
-	enum { ESC = 27, FIXGOTOXY = 5};
-	enum { ROWS = 20, COLS = 80};
-	enum{PLAYER_1_LOC_X=1,PLAYER_1_LOC_Y=1};//player 1 Name Location
+	enum { ESC = 27, FIXGOTOXY = 5 };
+	enum { ROWS = 20, COLS = 80 };
+	enum { PLAYER_1_LOC_X = 1, PLAYER_1_LOC_Y = 1 };//player 1 Name Location
 	enum { PLAYER_2_LOC_X = 65, PLAYER_2_LOC_Y = 1 };//player 2 Name Location
-	enum{ NUM_OF_RIDDLES = 9 ,NUM_OF_CREATURES=5};
 	Snake s[2];
 	Board gameBoard[1];
 	int currBoard = 0;
@@ -30,7 +30,7 @@ class TheSnakesGame {
 	flyingCols fcCW, fc;
 	numberEater nE;
 public:
-	TheSnakesGame() :fr(false),frCW(true),fcCW(true),fc(false),nE(false){
+	TheSnakesGame() :fr(false), frCW(true), fcCW(true), fc(false), nE(false) {
 		currRiddle = 0;
 		creaturesArray[0] = &frCW;
 		creaturesArray[1] = &fr;
@@ -45,7 +45,7 @@ public:
 
 	Board& getBoard(int currBoard)
 	{
-		return gameBoard[currBoard-1];
+		return gameBoard[currBoard - 1];
 	}
 
 	Riddles getRiddles() {
@@ -73,19 +73,25 @@ public:
 	}
 	void foodIsEaten();
 	void moveBullets();
-	void moveSingleBullet(int snake,int bullet, Point pos, int direction);
+	void moveSingleBullet(int snake, int bullet, Point pos, int direction);
 	void deleteSingleBulletFromBoard(int snake, int bullet, Point Pos);
-	void handleWhatIsHit(int snake,int bullet,Point pos,int direction,int hit);
+	void handleWhatIsHit(int snake, int bullet, Point pos, int direction, int hit);
 	void disappearSpecificSnake(int snake);
 	void canMoveSpecificSnake(int snake);
 	void restoreDeadCreatures();
 	void moveCreatures();
+	void changeToNextRiddleWithoutPrint();
 	void handleCreatureHit(int i);
 	void creatureWasHit(Point nextPos);
 	Bullet* findBulletInBothSnakes(Point pos);
 	bool checkIfThereAreMatchingNumbers();
 	Point findTheClosestNumber(Point pos);
 	int  calculateDistanceBetweenTwoPoints(Point pos1, Point pos2);
+	Creature* getCreaturesArray() {
+		return *creaturesArray;
+	}
+	void moveAllObjects();
+	void insertNewNumberCounter(int fiveMoves);
 };
 
 #endif

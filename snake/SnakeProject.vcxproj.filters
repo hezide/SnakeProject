@@ -51,13 +51,13 @@
     <ClCompile Include="flyingCols.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Bullet.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="ReplayMission.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="numberEater.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="number.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

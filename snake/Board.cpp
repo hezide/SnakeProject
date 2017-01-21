@@ -16,6 +16,14 @@ void Board::printBoard() {
 	}
 }
 
+void Board::insertCharToBoard(char _ch, Point point, Color color)
+{
+	missionToReplay.insertItemToQueue(point, _ch, step, color);
+	int x, y;
+	x = point.getX();
+	y = point.getY();
+	board[y][x] = _ch;
+}
 
 void Board::insertRndNumberToFood(int cheat)
 {
@@ -123,11 +131,27 @@ void Board::clearHalfOfTheNumbers()
 	printBoard();
 
 }
+void Board::clearAllTheNumbers()
+{
+	int size = foodSize;
+	for (int i = 0; i < size; i++) {
+		removeNumber(food[i]);
+	}
+}
 
 void Board::removeNumber(Number & numToRemove)
 {
 	removeNumFromBoard(numToRemove);
 	removeNumFromFood(numToRemove);
+}
+
+int Board::findNumberInFood(Number num)
+{
+	for (int i = 0; i < foodSize; i++) {
+		if (food[i] == num)
+			return i;
+	}
+	return -1;
 }
 
 void Board::removeNumFromBoard(Number & numToRemove)

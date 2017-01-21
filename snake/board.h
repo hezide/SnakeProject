@@ -24,14 +24,7 @@ public:
 	{
 		return board[y][x];
 	}
-	void insertCharToBoard(char _ch, Point point,Color color=WHITE)
-	{
-		missionToReplay.insertItemToQueue(point, _ch, step,color);
-		int x, y;
-		x = point.getX();
-		y = point.getY();
-		board[y][x] = _ch;
-	}
+	void insertCharToBoard(char _ch, Point point, Color color = WHITE);
 	int getFoodSize()
 	{
 		return foodSize;
@@ -49,10 +42,10 @@ public:
 		cout << number.getNum();
 	}
 	bool posIsOk(Point pos, int numOfDigits);//check if the position of the number is next to a snake 
-
 	void resetBoard();
 	Number& getNumber(Point pos);
 	void clearHalfOfTheNumbers();
+	void clearAllTheNumbers();
 	void removeNumber(Number& numToRemove);
 	Number* getNumberArr(){
 		return food;
@@ -70,6 +63,7 @@ public:
 	void replayMission() {
 		missionToReplay.restoreSavedMission();
 	}
+	int findNumberInFood(Number num);
 private:
 	void removeNumFromBoard(Number& numToRemove);
 	void removeNumFromFood(Number& numToRemove);

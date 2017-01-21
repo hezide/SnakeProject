@@ -30,7 +30,6 @@ void TheSnakesGame::init() {
 	s[1].unActiveAllBullets();
 
 	currRiddle = 0;
-	riddleArray.createComplexExercise();
 	menu.routePrintMenu('b');//print a blank board
 }
 
@@ -41,6 +40,7 @@ void TheSnakesGame::run() {
 	Point foodPoint;
 
 	riddleArray.printRiddle(currRiddle);
+
 	hideCursor();
 	do {
 		printPlayersStats();
@@ -62,28 +62,9 @@ void TheSnakesGame::run() {
 				checkOppositeDir(1, key, dir);
 		}
 		foodIsEaten();//checks if one of the players ate food, and pass it on to the board
-
-		moveBullets();//move all the bullets on the screen
-		moveCreatures();
-		Sleep(50);
-		s[0].returnAfterGetShot();//return the snake the the game only after 5 numbers came up
-		s[0].move();
-
-		s[1].returnAfterGetShot();//return the snake the the game only after 5 numbers came up
-		s[1].move();
-		gameBoard[0].increaseStep();
-		Sleep(50);
-		moveBullets();
-		moveCreatures();
-		gameBoard[0].increaseStep();
-		Sleep(50);
-
+		moveAllObjects();
 		fiveMoves++;
-		if (fiveMoves % 5 == 0) {//check if we need to add another number to board
-			this->getBoard(1).insertRndNumberToFood();
-			s[0].setCanMove(s[0].getCanMove() + 1);
-			s[1].setCanMove(s[1].getCanMove() + 1);
-		}
+		insertNewNumberCounter(fiveMoves);
 	} while (key != ESC);
 
 	if (key == ESC) {//pause the game and go to secondary menu
@@ -97,6 +78,7 @@ void TheSnakesGame::mainMenu() {
 	char selection;
 	hideCursor();
 	gameBoard->resetBoard();//clear the board
+	getBoard(1).clearAllTheNumbers();
 	selection = menu.routePrintMenu('m');
 	switch (selection) {
 		//print instructions to the screen
@@ -158,10 +140,10 @@ void TheSnakesGame::secondaryMenu() {
 		//Start new stage
 	case '5':
 		menu.routePrintMenu('b');
-		changeToNextRiddle();
+		changeToNextRiddleWithoutPrint();
 		s[0].unActiveAllBullets();
 		s[1].unActiveAllBullets();
-
+		gameBoard[0].clearHalfOfTheNumbers();
 		run();
 		break;
 		//start New Game
@@ -171,6 +153,8 @@ void TheSnakesGame::secondaryMenu() {
 		gameBoard[0].printBoard();
 		getBoard(1).resetReplayMission();//we changed the riddle(misison) so we reset the storage of the replayMission
 		getBoard(1).captureBoard();//capture the game board
+		gameBoard[0].clearAllTheNumbers();
+
 		run();
 		break;
 	case '7':
@@ -227,16 +211,22 @@ void TheSnakesGame::findMatchingNumbers() {
 
 void TheSnakesGame::changeToNextRiddle()
 {
+	Sleep(500);
+
 	restoreDeadCreatures();
 
+	if (_kbhit()) {
+		char key = _getch();
+		if (key == ESC) {
+			secondaryMenu();
+			exit(1);
+		}
+	}
 	s[0].unActiveAllBullets();
 	s[1].unActiveAllBullets();
-	currRiddle = (currRiddle + 1) % NUM_OF_RIDDLES;
-	if (currRiddle == 0)
-		riddleArray.createComplexExercise();
+	currRiddle = (currRiddle + 1) % riddleArray.getNumOfRiddles();
 	riddleArray.printRiddle(currRiddle);
 	gameBoard[0].clearHalfOfTheNumbers();
-	Sleep(500);
 
 	getBoard(1).resetReplayMission();//we changed the riddle(misison) so we reset the storage of the replayMission
 	getBoard(1).captureBoard();//capture the game board
@@ -344,22 +334,22 @@ void TheSnakesGame::moveBullets() {
 	Point nextPos, pos;
 	int hitNext, hit;
 	int direction;
-		for (int i = 0; i <= 1; i++) {//snake
-			for (int j = 0; j < 5; j++) {//bullets of each snake
-				if (s[i].getBulletFromStack(j).isActive()) {
-					direction = s[i].getBulletFromStack(j).getDirection();
-					pos.set(s[i].getBulletFromStack(j).getX(), s[i].getBulletFromStack(j).getY());
-					nextPos = pos.next(direction);
+	for (int i = 0; i <= 1; i++) {//snake
+		for (int j = 0; j < 5; j++) {//bullets of each snake
+			if (s[i].getBulletFromStack(j).isActive()) {
+				direction = s[i].getBulletFromStack(j).getDirection();
+				pos.set(s[i].getBulletFromStack(j).getX(), s[i].getBulletFromStack(j).getY());
+				nextPos = pos.next(direction);
 
-					hitNext = s[i].hitSomething(nextPos);//check the next position
-					hit = s[i].hitSomething(pos);//check the actual position
-					if (hit == 1 || hit == 0)//check if one of the snakes run over the bullet from the side
-						handleWhatIsHit(i, j, pos, direction, hit);
-					else
-						handleWhatIsHit(i, j, pos, direction, hitNext);
-				}
+				hitNext = s[i].hitSomething(nextPos);//check the next position
+				hit = s[i].hitSomething(pos);//check the actual position
+				if (hit == 1 || hit == 0)//check if one of the snakes run over the bullet from the side
+					handleWhatIsHit(i, j, pos, direction, hit);
+				else
+					handleWhatIsHit(i, j, pos, direction, hitNext);
 			}
 		}
+	}
 }
 
 void TheSnakesGame::moveSingleBullet(int snake, int bullet, Point pos, int direction) {
@@ -407,7 +397,8 @@ void TheSnakesGame::handleWhatIsHit(int snake, int bullet, Point pos, int direct
 			//second Bullet
 			deleteSingleBulletFromBoard(snake, bullet, nextPos);
 			s[snake].findBulletByPos(nextPos).setActiveStatus(false);
-		}else
+		}
+		else
 			moveSingleBullet(snake, bullet, pos, direction);
 		break;
 	case 4://if he hit the other snake bullet
@@ -436,11 +427,25 @@ void TheSnakesGame::canMoveSpecificSnake(int snake)
 
 void TheSnakesGame::restoreDeadCreatures()
 {
-	for (int i = 0; i < NUM_OF_CREATURES;i++) {
+	for (int i = 0; i < NUM_OF_CREATURES; i++) {
 		if (!creaturesArray[i]->getIsActive()) {
 			creaturesArray[i]->init();
 		}
 	}
+}
+
+void TheSnakesGame::changeToNextRiddleWithoutPrint() {
+	restoreDeadCreatures();
+
+	s[0].unActiveAllBullets();
+	s[1].unActiveAllBullets();
+	currRiddle = (currRiddle + 1) % riddleArray.getNumOfRiddles();
+
+	gameBoard[0].clearHalfOfTheNumbers();
+
+	getBoard(1).resetReplayMission();//we changed the riddle(misison) so we reset the storage of the replayMission
+	getBoard(1).captureBoard();//capture the game board
+
 }
 
 void TheSnakesGame::moveCreatures()
@@ -503,7 +508,7 @@ Point TheSnakesGame::findTheClosestNumber(Point pos)
 {
 	Point res;
 	Number temp;
-	int minSteps=1000,steps=0;
+	int minSteps = 1000, steps = 0;
 	for (int i = 0; i < gameBoard[0].getFoodSize(); i++)
 	{
 		temp = gameBoard[0].getNumberArr()[i];
@@ -523,18 +528,42 @@ int TheSnakesGame::calculateDistanceBetweenTwoPoints(Point pos1, Point pos2) {
 	if (abs(pos1.getX() - pos2.getX())>39)
 	{
 		if (pos1.getX() > pos2.getX())
-			res+=79 - pos1.getX() + pos2.getX();
+			res += 79 - pos1.getX() + pos2.getX();
 		else
 			res += 79 - pos2.getX() + pos1.getX();
 	}
 	else {
 		if (pos1.getX() > pos2.getX())
-			res +=pos1.getX() - pos2.getX();
+			res += pos1.getX() - pos2.getX();
 		else
-			res +=pos2.getX() - pos1.getX();
+			res += pos2.getX() - pos1.getX();
 	}
 	return res;
-}													
+}
 
+void TheSnakesGame::moveAllObjects()
+{
+	moveBullets();//move all the bullets on the screen
+	moveCreatures();
+	Sleep(30);
+	s[0].returnAfterGetShot();//return the snake the the game only after 5 numbers came up
+	s[0].move();
 
+	s[1].returnAfterGetShot();//return the snake the the game only after 5 numbers came up
+	s[1].move();
+	gameBoard[0].increaseStep();
+	Sleep(30);
+	moveBullets();
+	moveCreatures();
+	gameBoard[0].increaseStep();
+	Sleep(30);
+}
 
+void TheSnakesGame::insertNewNumberCounter(int fiveMoves)
+{
+	if (fiveMoves % 5 == 0) {//check if we need to add another number to board
+		this->getBoard(1).insertRndNumberToFood();
+		s[0].setCanMove(s[0].getCanMove() + 1);
+		s[1].setCanMove(s[1].getCanMove() + 1);
+	}
+}

@@ -11,6 +11,25 @@ void Menu::printMenu(const char menu[ROWS][COLS+1]) {
 	}
 }
 
+char Menu::routePrintMenu(char menuChar)
+{
+	//m=Main, s=Secondary b=blank
+	switch (menuChar) {
+	case 'm':
+		printMenu(mainMenu);
+		return mainMenuGetInput();
+		break;
+	case's':
+		printMenu(secMenu);
+		return secondaryMenuGetInput();
+		break;
+	case 'b':
+		printMenu(blankMenu);
+		break;
+	}
+	return NULL;//should never reach here;
+}
+
 char Menu::mainMenuGetInput() {
 
 	char selection;
