@@ -1,0 +1,22 @@
+﻿  Board.cpp
+  Creature.cpp
+  flyingCols.cpp
+  flyingRows.cpp
+  io_utils.cpp
+  main.cpp
+  Menu.cpp
+  Message.cpp
+  number.cpp
+  numberEater.cpp
+  Point.cpp
+  ReplayMission.cpp
+  Riddles.cpp
+Riddles.cpp(162): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
+Riddles.cpp(173): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
+  Snake.cpp
+  TheSnakesGame.cpp
+  Generating code
+  All 613 functions were compiled because no usable IPDB/IOBJ from previous compilation was found.
+  Finished generating code
+  SnakeProject.vcxproj -> C:\Users\Hezi\Documents\Visual Studio 2015\Projects\SnakeProject\x64\Release\SnakeProject.exe
+  SnakeProject.vcxproj -> C:\Users\Hezi\Documents\Visual Studio 2015\Projects\SnakeProject\x64\Release\SnakeProject.pdb (Full PDB)
